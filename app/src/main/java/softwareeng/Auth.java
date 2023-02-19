@@ -24,7 +24,6 @@ public class Auth {
         email = sc.nextLine();
         System.out.print("Enter Password : ");
         String user_pass = sc.nextLine();
-        sc.close();
 
         String query = "select name,role,password from auth where email='" + email + "'";
         Statement st = con.createStatement();
@@ -43,7 +42,6 @@ public class Auth {
             System.out.println("Login Failed");
             role="";
         }
-
         return role;
     }
 }
