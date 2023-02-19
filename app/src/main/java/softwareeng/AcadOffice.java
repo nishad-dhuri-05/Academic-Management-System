@@ -108,7 +108,6 @@ public class AcadOffice {
                 String query = "insert into course_catalog (course_code,L,T,P,Credits) values ('"
                         + course_code + "'," + l + "," + t + "," + p + "," + credits + ");";
 
-                System.out.println(query);
                 Statement st = con.createStatement();
                 int x = st.executeUpdate(query);
 
@@ -125,45 +124,89 @@ public class AcadOffice {
                     }
                 }
 
-            } else if (option == 3) {
+            }
+
+            else if (option == 3) {
                 String course_code, pre_req;
-                int l, t, p, credits;
+                Float l, t, p, credits;
 
                 System.out.println("Select Course Code To Update \n");
                 Scanner sc1 = new Scanner(System.in);
                 course_code = sc1.nextLine();
 
+                String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code and course_catalog.course_code='"
+                        + course_code + "' ;";
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(query);
+
+                while (rs.next()) {
+                    course_code = rs.getString("course_code");
+                    String display_l = rs.getString("l");
+                    String display_t = rs.getString("t");
+                    String display_p = rs.getString("p");
+                    String display_credits = rs.getString("credits");
+                    pre_req = rs.getString("pre_req");
+
+                    System.out.println("  " + course_code + "  " + "|" + display_l + "-" + display_t + "-" + display_p
+                            + "-" + display_credits
+                            + "|" + pre_req);
+                }
+
                 System.out.println("\nEnter Lecture hours \n");
-                l = Integer.parseInt(sc1.nextLine());
+                l = sc1.nextFloat();
+                sc1.nextLine();
 
                 System.out.println("\nEnter Tutorial hours \n");
-                t = Integer.parseInt(sc1.nextLine());
+                t = sc1.nextFloat();
+                sc1.nextLine();
 
                 System.out.println("\nEnter Practical hours \n");
-                p = Integer.parseInt(sc1.nextLine());
+                p = sc1.nextFloat();
+                sc1.nextLine();
 
                 System.out.println("\nEnter Credits \n");
-                credits = Integer.parseInt(sc1.nextLine());
+                credits = sc1.nextFloat();
+                sc1.nextLine();
 
-                String query = "insert into course_catalog (course_code,L,T,P,Credits) values ('"
-                        + course_code + "'," + l + "," + t + "," + p + "," + credits + ");";
+                query = "update course_catalog set l=" + l + ", t= " + t + ", p=" + p + ", credits=" + credits
+                        + " where course_code='" + course_code + "';";
 
                 System.out.println(query);
-                Statement st = con.createStatement();
-                int x = st.executeUpdate(query);
+
+                Statement st1 = con.createStatement();
+                int x = st1.executeUpdate(query);
 
                 while (true) {
-                    System.out.println("\nEnter pre-requisites (Enter NIL if none). Once done, enter q \n");
-                    pre_req = sc.nextLine();
-                    if (pre_req.equalsIgnoreCase("q")) {
-                        break;
-                    } else {
-                        String query_ = "insert into course_catalog (course_code,pre_req) values ('"
+                    int option_pre = 0;
+                    System.out.println("\nSelect Option \n");
+
+                    System.out.println("\n1. Add new pre-requisite \n");
+                    System.out.println("\n2. Delete pre-requisite \n");
+                    System.out.println("\n3. No change \n");
+
+                    option_pre = sc1.nextInt();
+                    sc1.nextLine();
+
+                    if (option_pre == 1) {
+                        System.out.println("\nEnter pre-requisite to be added ");
+                        pre_req = sc1.nextLine();
+
+                        String query_ = "insert into pre_reqs (course_code,pre_req) values ('"
                                 + course_code + "','" + pre_req + "');";
-                        System.out.println(query_);
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
+                    } else if (option_pre == 2) {
+                        System.out.println("\nEnter pre-requisite to be deleted ");
+                        pre_req = sc1.nextLine();
+
+                        String query_ = "delete from pre_reqs where course_code='" + course_code + "' and pre_req='"
+                                + pre_req + "';";
+                        Statement st_ = con.createStatement();
+                        x = st_.executeUpdate(query_);
+                    } else {
+                        return;
                     }
+
                 }
             } else {
                 return;

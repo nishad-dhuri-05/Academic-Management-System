@@ -4,7 +4,7 @@ create table course_offering(
     offering_dept varchar(20)NOT NULL,
     offered_dept varchar(20) ,
     batch int not null,
-    min_cgpa float8 NOT NULL,
+    min_cgpa float(8) NOT NULL,
     status varchar(20),
     type varchar(10),
     PRIMARY KEY(course_code,batch,offered_dept)

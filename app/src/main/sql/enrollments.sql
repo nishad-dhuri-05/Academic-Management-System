@@ -5,7 +5,7 @@ create table enrollments(
 
     course_code varchar(20),
     course_dept varchar(20),
-    credit float8 ,
+    credit float(8) ,
 
     type varchar(10),
     grade varchar(5),
