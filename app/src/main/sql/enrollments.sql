@@ -27,6 +27,12 @@ insert into enrollments (entry_no,course_code,grade,status)
 values ('2020csb1153', 'CS301','A', 'COMPLETED' );
 insert into enrollments (entry_no,course_code,grade,status)
 values ('2020csb1154', 'CS305', 'A','COMPLETED' );
+insert into enrollments (entry_no,course_code,grade,status)
+values ('2020csb1153', 'CS305', 'A','COMPLETED' );
+insert into enrollments (entry_no,course_code,grade,status)
+values ('2020csb1317', 'CS301', 'A-', 'COMPLETED' );
+insert into enrollments (entry_no,course_code,grade,status)
+values ('2020csb1106', 'CS301', 'A-','COMPLETED' );
 
 insert into students (entry_no,student_dept,batch)
 values ('2020csb1317','CSE',2020);

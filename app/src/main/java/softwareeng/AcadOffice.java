@@ -64,13 +64,12 @@ public class AcadOffice {
             option = sc.nextInt();
             sc.nextLine();
 
-            System.out.println("Course Code | L-T-P-C | Pre_req");
-
             if (option == 1) {
                 String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
+                System.out.println("Course Code | L-T-P-C | Pre_req");
                 while (rs.next()) {
                     String course_code = rs.getString("course_code");
                     String l = rs.getString("l");
@@ -131,7 +130,7 @@ public class AcadOffice {
                 String course_code, pre_req;
                 Float l, t, p, credits;
 
-                System.out.println("Select Course Code To Update \n");
+                System.out.println("Enter Course Code To Update \n");
                 Scanner sc1 = new Scanner(System.in);
                 course_code = sc1.nextLine();
 
@@ -236,13 +235,75 @@ public class AcadOffice {
 
     }
 
-    public static void grade() {
+    public static void grade() throws Exception {
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        while (true) {
+
+            System.out.println("\n Select Operation : ");
+            System.out.println("1. View grades of all students in their enrollments");
+            System.out.println("2. View grades of students in a particular course");
+            System.out.println("3. View grades of a particular student ");
+            System.out.println("4. Go Back");
+
+            int option = 0;
+            Scanner sc = new Scanner(System.in);
+            option = sc.nextInt();
+            sc.nextLine();
+
+            String query = "";
+            Statement st;
+
+            if (option == 1) {
+                query = "select * from enrollments where status='COMPLETED'";
+
+            } else if (option == 2) {
+                String course_code;
+
+                System.out.println("Enter Course Code  \n");
+                sc = new Scanner(System.in);
+                course_code = sc.nextLine();
+
+                query = "select * from enrollments where course_code = '" + course_code + "'";
+
+            } else if (option == 3) {
+                String entry_no;
+
+                System.out.println("Enter student entry no.  \n");
+                sc = new Scanner(System.in);
+                entry_no = sc.nextLine();
+
+                query = "select * from enrollments where entry_no = '" + entry_no + "'";
+
+            } else {
+                return;
+            }
+
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            System.out.println(" Entry_No | Course_code | grade | status ");
+            while (rs.next()) {
+                String entry_no = rs.getString("entry_no");
+                String course_code = rs.getString("course_code");
+                String grade = rs.getString("grade");
+                String status = rs.getString("status");
+
+                System.out.println("  " + entry_no + "  " + "|" + course_code + "|" + grade + "|" + status);
+
+            }
+        }
 
     }
 
     public static void transcript() {
 
     }
-
 
 }
