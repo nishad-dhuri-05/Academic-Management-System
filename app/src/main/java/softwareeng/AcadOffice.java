@@ -56,7 +56,8 @@ public class AcadOffice {
             System.out.println("1. View Course Catalog");
             System.out.println("2. Add a course");
             System.out.println("3. Update a course");
-            System.out.println("4. Go Back");
+            System.out.println("4. Delete a course");
+            System.out.println("5. Go Back");
 
             int option = 0;
             Scanner sc = new Scanner(System.in);
@@ -204,10 +205,30 @@ public class AcadOffice {
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
                     } else {
-                        return;
+                        break;
                     }
 
                 }
+            } else if (option == 4) {
+                String course_code;
+                int option_;
+                System.out.println("Enter course code to be deleted \n");
+                Scanner sc1 = new Scanner(System.in);
+                course_code = sc1.nextLine();
+
+                System.out.println("Press 1 to confirm deletion \n");
+                // Scanner sc1 = new Scanner(System.in);
+                option_ = sc1.nextInt();
+                sc1.nextLine();
+
+                if (option_ == 1) {
+                    String query_ = "delete from pre_reqs where course_code='" + course_code
+                            + "'; delete from course_catalog where course_code='" + course_code + "';";
+                    Statement st_ = con.createStatement();
+                    int x = st_.executeUpdate(query_);
+
+                }
+
             } else {
                 return;
             }
@@ -223,7 +244,5 @@ public class AcadOffice {
 
     }
 
-    public static void catalog_opt1() {
 
-    }
 }
