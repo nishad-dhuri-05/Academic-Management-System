@@ -1,6 +1,7 @@
 package softwareeng;
 
 import java.sql.*;
+import java.util.Formatter;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -177,7 +178,6 @@ public class Faculty {
 
     }
 
-    
     public static void view_offerings() throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
@@ -192,18 +192,33 @@ public class Faculty {
         Statement st;
         ResultSet rs;
 
-        query = "select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type " +
-                "FROM course_offering"+
+        query = "select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type "
+                +
+                "FROM course_offering " +
                 "inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;";
         st = con.createStatement();
         rs = st.executeQuery(query);
 
+        Formatter fmt = new Formatter();
+        fmt.format("\n %30s | %30s | %30s | %30s | %30s | %30s | %30s | %30s \n", "COURSE_CODE", "ACAD_YEAR",
+                "SEMESTER", "INSTRUCTOR_Email", "OFFERED_DEPT", "BATCH", "MIN CGPA", "TYPE");
+
         while (rs.next()) {
             // course_dept = rs.getString("department");
+            String course_code = rs.getString("course_code");
+            String start_acad_year = rs.getString("start_acad_year");
+            String semester = rs.getString("semester");
+            String instructor_email = rs.getString("instructor_email");
+            String offered_dept = rs.getString("offered_dept");
+            String batch = rs.getString("batch");
+            String min_cgpa = rs.getString("min_cgpa");
+            String type = rs.getString("type");
+
+            fmt.format("\n %30s | %30s | %30s | %30s | %30s | %30s | %30s | %30s", course_code, start_acad_year,
+                    semester, instructor_email, offered_dept, batch, min_cgpa, type);
         }
+        System.out.println(fmt);
 
-
-        
     }
 
     public static void upload_grades() {

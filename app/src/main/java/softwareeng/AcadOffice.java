@@ -1,6 +1,7 @@
 package softwareeng;
 
 import java.sql.*;
+import java.util.Formatter;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -69,7 +70,9 @@ public class AcadOffice {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
-                System.out.println("Course Code | L-T-P-C | Pre_req");
+                Formatter fmt = new Formatter();
+                fmt.format("\n %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES");
+
                 while (rs.next()) {
                     String course_code = rs.getString("course_code");
                     String l = rs.getString("l");
@@ -78,10 +81,12 @@ public class AcadOffice {
                     String credits = rs.getString("credits");
                     String pre_req = rs.getString("pre_req");
 
-                    System.out.println("  " + course_code + "  " + "|" + l + "-" + t + "-" + p + "-" + credits
-                            + "|" + pre_req);
+                    String ltpc = l + "-" + t + "-" + p + "-" + credits;
+                    fmt.format("\n %20s | %20s | %20s \n", course_code, ltpc, pre_req);
 
                 }
+
+                System.out.println(fmt);
             }
 
             else if (option == 2) {
