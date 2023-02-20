@@ -16,3 +16,11 @@ insert into offered_to (course_code,start_acad_year,semester, offered_dept, batc
 values (
     'CS305',2022,2, 'CSE',2020, 7 , 'PC'
 );
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CS201',2021,1, 'CSE',2020, 7 , 'PC'
+);
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CS101',2020,2, 'CSE',2020, 7 , 'PC'
+);
