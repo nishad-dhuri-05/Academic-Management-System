@@ -35,6 +35,12 @@ public class Auth {
         }
 
         if (user_pass.equals(email_pass)) {
+
+            st = con.createStatement();
+            query = "truncate table logs; insert into logs(email,role) values ('"+email+"','"+role+"');";
+            int m = st.executeUpdate(query);
+            
+
             System.out.println("\n==================================================\n Welcome " + user_name);
             System.out.println("You are logged in as " + role);
             System.out.println("==================================================");

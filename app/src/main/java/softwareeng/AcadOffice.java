@@ -27,13 +27,13 @@ public class AcadOffice {
             if (option == 1) {
                 catalog();
             } else if (option == 2) {
-                grade();
+                view_grades();
             } else if (option == 3) {
                 transcript();
             } else if (option == 4) {
                 return;
             } else {
-                System.out.println("Select a number among 1,2,3 \n");
+                System.out.println("Select a valid option \n");
             }
 
             System.out.println("\n==================================================");
@@ -235,7 +235,7 @@ public class AcadOffice {
 
     }
 
-    public static void grade() throws Exception {
+    public static void view_grades() throws Exception {
         ResourceBundle rd = ResourceBundle.getBundle("config");
         String url = rd.getString("url"); // localhost:5432
         String username = rd.getString("username");
