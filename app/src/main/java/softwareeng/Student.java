@@ -54,10 +54,242 @@ public class Student {
 
     public static void coursereg() throws Exception {
 
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String email = "";
+        String query = "";
+        String entry_no = "";
+        String department = "";
+        int batch = 0;
+
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        // Fetch Calendar
+
+        int current_start_acad_year = 0;
+        int current_semester = 0;
+
+        query = "Select * from calendar ;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+            current_semester = Integer.parseInt(rs.getString("semester"));
+        }
+
+        // Get All Student Info
+
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        query = "Select * from auth where email= '" + email + "';";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            entry_no = rs.getString("entry_no");
+            department = rs.getString("department");
+            batch = Integer.parseInt(rs.getString("batch"));
+        }
+
+        float student_cgpa = get_cgpa();
+        int eligible = -1;
+
+        view_offerings();
+
+        // Select Course for Enrollment
+
+        System.out.println("Enter course code you want to register in: ");
+        String course_code = "";
+        Scanner sc = new Scanner(System.in);
+        course_code = sc.nextLine();
+
+        // Check Eligibility
+
+        query = String.format(
+                "select * from offered_to where course_code = '%s' and start_acad_year = %d and semester = %d and offered_dept = '%s' and batch = %d ;",
+                course_code, current_start_acad_year, current_semester, department, batch);
+
+        // System.out.println(query);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        if (!rs.isBeforeFirst()) {
+            System.out.println("Course not offered to your batch ! Course Registration Failed");
+            eligible = 0;
+        }
+
+        else {
+
+            // Check CGPA
+
+            int min_cgpa = 0;
+            while (rs.next()) {
+                min_cgpa = Integer.parseInt(rs.getString("min_cgpa"));
+            }
+
+            if (student_cgpa >= min_cgpa) {
+
+                // Check pre-reqs
+
+                query = String.format("select * from pre_reqs where course_code = '%s';", course_code);
+                st = con.createStatement();
+                rs = st.executeQuery(query);
+
+                int flag = 0;
+                while (rs.next()) {
+
+                    String pre_req_course_code = rs.getString("pre_req");
+                    query = String.format(
+                            "select * from enrollments where entry_no = '%s' and course_code = '%s' and status = 'PASSED';",
+                            entry_no, pre_req_course_code);
+
+                    st = con.createStatement();
+                    ResultSet rs2 = st.executeQuery(query);
+
+                    if (!rs2.isBeforeFirst()) {
+                        flag = 1;
+                        System.out.println(String.format("Pre-requisite %s not met ! Course Registration Failed",
+                                pre_req_course_code));
+                        break;
+                    }
+                }
+
+                if (flag == 0) {
+                    eligible = 1;
+                } else {
+                    eligible = 0;
+                }
+
+            } else {
+                System.out.println("CGPA not met ! Course Registration Failed");
+                eligible = 0;
+            }
+        }
+
+        if (eligible == 1) {
+
+            query = String.format(
+                    "insert into enrollments (entry_no,course_code,status,start_acad_year,semester) values ( '%s' , '%s' , 'RUNNING' , %d, %d);",
+                    entry_no, course_code, current_start_acad_year, current_semester);
+
+            st = con.createStatement();
+            x = st.executeUpdate(query);
+
+            if (x == 1) {
+                System.out.println("Course Registered Successfully");
+            } else {
+                System.out.println("Course Registration Failed");
+            }
+        } else {
+            System.out.println("Eligibility criteria not met ! Course Registration Failed");
+        }
     }
 
     public static void coursedereg() throws Exception {
 
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String email = "";
+        String query = "";
+        String entry_no = "";
+        String department = "";
+        int batch = 0;
+
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        // Fetch Calendar
+
+        int current_start_acad_year = 0;
+        int current_semester = 0;
+
+        query = "Select * from calendar ;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+            current_semester = Integer.parseInt(rs.getString("semester"));
+        }
+
+        // Get All Student Info
+
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        query = "Select * from auth where email= '" + email + "';";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            entry_no = rs.getString("entry_no");
+            department = rs.getString("department");
+            batch = Integer.parseInt(rs.getString("batch"));
+        }
+
+        // Select Course for De-Enrollment
+
+        System.out.println("Enter course code you want to de-register from: ");
+        String course_code = "";
+        Scanner sc = new Scanner(System.in);
+        course_code = sc.nextLine();
+
+        query = String.format(
+                "select * from enrollments where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
+                entry_no, course_code, current_start_acad_year, current_semester);
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        if (!rs.isBeforeFirst()) {
+            System.out.println("Course not registered ! Course De-Registration Failed");
+        } else {
+
+            query = String.format(
+                    "update enrollments set status = 'DROPPED' where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
+                    entry_no, course_code, current_start_acad_year, current_semester);
+            
+            st = con.createStatement();
+            x = st.executeUpdate(query);
+
+            if (x == 1) {
+                System.out.println("Course De-Registered Successfully");
+            } else {
+                System.out.println("Course De-Registration Failed");
+            }
+
+        }
     }
 
     public static void view_grades() throws Exception {
@@ -100,8 +332,8 @@ public class Student {
         }
 
         query = String.format(
-                "select enrollments.course_code,grade,status,type from enrollments,offered_to where entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester ;",
-                entry_no);
+                "select enrollments.course_code,grade,status,type from enrollments,offered_to where entry_no = '%s' and batch = %d and offered_dept= '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester ;",
+                entry_no, batch, department);
         st = con.createStatement();
         rs = st.executeQuery(query);
 
@@ -306,7 +538,7 @@ public class Student {
             System.out.println(
                     " \n ==================================================================================== \n ");
             System.out.println(
-                    "                                   YOU ARE NOT ELIGIBLE FOR GRADUATION !                    ");
+                    "                                   YOU ARE NOT ELIGIBLE FOR GRADUATION !                     ");
             System.out.println(
                     " \n ==================================================================================== \n ");
 
@@ -371,6 +603,10 @@ public class Student {
                 st = con.createStatement();
                 x = st.executeUpdate(query);
 
+                if (x == 1) {
+                    System.out.println("Email updated successfully");
+                }
+
             } else if (option == 2) {
                 System.out.println("Enter new " + name_field);
                 String new_name = sc.nextLine();
@@ -378,6 +614,11 @@ public class Student {
                 query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Name updated successfully");
+                }
+
             } else if (option == 3) {
                 System.out.println("Enter new " + department_field);
                 String new_dept = sc.nextLine();
@@ -385,6 +626,11 @@ public class Student {
                 query = String.format("update auth set department = '%s' where email = '%s'", new_dept, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Department updated successfully");
+                }
+
             } else if (option == 4) {
                 System.out.println("Enter new " + password_field);
                 String new_pass = sc.nextLine();
@@ -392,6 +638,11 @@ public class Student {
                 query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Password updated successfully");
+                }
+
             } else if (option == 5) {
                 System.out.println("Enter new " + joining_data_field + " ( Format : YYYY-MM-DD)");
                 String new_doj = sc.nextLine();
@@ -399,11 +650,60 @@ public class Student {
                 query = String.format("update auth set joining_date = '%s' where email = '%s' ", new_doj, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Joining date updated successfully");
+                }
+
             } else {
                 break;
             }
 
         }
+
+    }
+
+    public static void view_offerings() throws Exception {
+
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String query = "";
+        Statement st;
+        ResultSet rs;
+
+        query = "select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type "
+                +
+                "FROM course_offering " +
+                "inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        Formatter fmt = new Formatter();
+        fmt.format("\n %15s | %10s | %10s | %30s | %15s | %10s | %10s | %10s \n", "COURSE_CODE", "ACAD_YEAR",
+                "SEMESTER", "INSTRUCTOR_EMAIL", "OFFERED_DEPT", "BATCH", "MIN CGPA", "TYPE");
+
+        while (rs.next()) {
+            // course_dept = rs.getString("department");
+            String course_code = rs.getString("course_code");
+            String start_acad_year = rs.getString("start_acad_year");
+            String semester = rs.getString("semester");
+            String instructor_email = rs.getString("instructor_email");
+            String offered_dept = rs.getString("offered_dept");
+            String batch = rs.getString("batch");
+            String min_cgpa = rs.getString("min_cgpa");
+            String type = rs.getString("type");
+
+            fmt.format("\n %15s | %10s | %10s | %30s | %15s | %10s | %10s | %10s", course_code, start_acad_year,
+                    semester, instructor_email, offered_dept, batch, min_cgpa, type);
+        }
+        System.out.println(fmt);
+
     }
 
 }

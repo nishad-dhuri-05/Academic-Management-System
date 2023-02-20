@@ -8,7 +8,7 @@ create table enrollments(
     grade varchar(5),
     status varchar(20),
 
-    PRIMARY KEY (entry_no, course_code, start_acad_year,semester)
+    PRIMARY KEY (entry_no, course_code, start_acad_year,semester,status)
     
 );
 

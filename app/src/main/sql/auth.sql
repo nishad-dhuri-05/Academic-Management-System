@@ -15,6 +15,9 @@ values ('acad@iitrpr.ac.in', 'acad' , 'acad office','acadpass');
 insert into auth(email,role,name,password,department)
 values ('faculty1@iitrpr.ac.in', 'faculty', 'faculty1','faculty1pass','CSE');
 
+insert into auth(email,role,name,password,department)
+values ('faculty2@iitrpr.ac.in', 'faculty', 'faculty2','faculty2pass','CSE');
+
 insert into auth(email,role,batch,name,password,department,entry_no)
 values ('2020csb1317@iitrpr.ac.in', 'student','2020', 'Subham','2020csb1317','CSE','2020csb1317');
 insert into auth(email,role,batch,name,password,department,entry_no)

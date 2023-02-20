@@ -17,7 +17,7 @@ public class Faculty {
             System.out.println("Select Operation : ");
             System.out.println("1. Register a Course Offering");
             System.out.println("2. Deregister a Course Offering");
-            System.out.println("3. View All Course Offerings");
+            System.out.println("3. View Course Catalog");
             System.out.println("4. Upload Grades");
             System.out.println("5. View Grades");
             System.out.println("6. Update Profile");
@@ -34,7 +34,7 @@ public class Faculty {
             } else if (option == 2) {
                 deregister_course_offering();
             } else if (option == 3) {
-                view_offerings();
+                view_catalog();
             } else if (option == 4) {
                 upload_grades();
             } else if (option == 5) {
@@ -122,7 +122,6 @@ public class Faculty {
             query = String.format(
                     "Insert into course_offering(course_code,start_acad_year,semester,instructor_email,offering_dept,status) values ('%s','%d','%d','%s','%s','%s');",
                     course_code, current_start_acad_year, current_semester, email, course_dept, "RUNNING");
-            System.out.println(query);
 
             st = con.createStatement();
             int m = st.executeUpdate(query);
@@ -170,6 +169,8 @@ public class Faculty {
                 }
             }
 
+            System.out.println("Course offering successfully registered !");
+
             System.out.println(
                     "\n====================================================================================\n");
 
@@ -177,11 +178,7 @@ public class Faculty {
 
     }
 
-    public static void deregister_course_offering() {
-
-    }
-
-    public static void view_offerings() throws Exception {
+    public static void deregister_course_offering() throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
         String url = rd.getString("url"); // localhost:5432
@@ -195,31 +192,111 @@ public class Faculty {
         Statement st;
         ResultSet rs;
 
-        query = "select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type "
-                +
-                "FROM course_offering " +
-                "inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;";
+        // Fetch Calendar
+
+        int current_start_acad_year = 0;
+        int current_semester = 0;
+
+        query = "Select * from calendar ;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+            current_semester = Integer.parseInt(rs.getString("semester"));
+        }
+
+        // Fetch Email
+
+        String email = "";
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        // Department Check
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the course code you want to deregister");
+        String course_code = sc.nextLine();
+
+        query = String.format(
+                "select * from course_offering where course_code = '%s' and start_acad_year = %d and semester = %d and instructor_email = '%s';",
+                course_code, current_start_acad_year, current_semester, email);
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        if (!rs.isBeforeFirst()) {
+            System.out.println("Course offering not registered ! Course Offering De-Registration Failed");
+        } else {
+
+            query = String.format(
+                    "Delete from course_offering where course_code='%s' and start_acad_year=%d and semester=%d and instructor_email='%s';",
+                    course_code, current_start_acad_year, current_semester, email);
+            
+            st = con.createStatement();
+            int m = st.executeUpdate(query);
+
+            query = String.format(
+                    "update enrollments set status = 'INSTRUCTOR WITHDREW' where course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
+                    course_code, current_start_acad_year, current_semester);
+
+            st = con.createStatement();
+            int n = st.executeUpdate(query);
+
+            if(m==1 && n==1){
+                System.out.println("Course Offering De-Registered Successfully !");
+            }
+            else{
+                System.out.println("Course Offering De-Registration Failed !");
+            }
+
+
+        }
+
+    }
+
+    public static void view_catalog() throws Exception {
+
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String query = "";
+        Statement st;
+        ResultSet rs;
+
+        query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
         st = con.createStatement();
         rs = st.executeQuery(query);
 
         Formatter fmt = new Formatter();
-        fmt.format("\n %30s | %30s | %30s | %30s | %30s | %30s | %30s | %30s \n", "COURSE_CODE", "ACAD_YEAR",
-                "SEMESTER", "INSTRUCTOR_Email", "OFFERED_DEPT", "BATCH", "MIN CGPA", "TYPE");
+        fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
 
         while (rs.next()) {
-            // course_dept = rs.getString("department");
             String course_code = rs.getString("course_code");
-            String start_acad_year = rs.getString("start_acad_year");
-            String semester = rs.getString("semester");
-            String instructor_email = rs.getString("instructor_email");
-            String offered_dept = rs.getString("offered_dept");
-            String batch = rs.getString("batch");
-            String min_cgpa = rs.getString("min_cgpa");
-            String type = rs.getString("type");
+            String l = rs.getString("l");
+            String t = rs.getString("t");
+            String p = rs.getString("p");
+            String credits = rs.getString("credits");
+            String department = rs.getString("department");
+            String pre_req = rs.getString("pre_req");
 
-            fmt.format("\n %30s | %30s | %30s | %30s | %30s | %30s | %30s | %30s", course_code, start_acad_year,
-                    semester, instructor_email, offered_dept, batch, min_cgpa, type);
+            String ltpc = l + "-" + t + "-" + p + "-" + credits;
+            fmt.format("\n %20s | %20s | %20s  | %20s\n", course_code, ltpc, pre_req, department);
+
         }
+
         System.out.println(fmt);
 
     }
@@ -281,16 +358,19 @@ public class Faculty {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
 
-            System.out.println(" Entry_No | Course_code | grade | status ");
+            Formatter fmt = new Formatter();
+            fmt.format("\n %30s | %30s | %30s | %30s | %30s \n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
+
             while (rs.next()) {
                 String entry_no = rs.getString("entry_no");
                 String course_code = rs.getString("course_code");
                 String grade = rs.getString("grade");
                 String status = rs.getString("status");
 
-                System.out.println("  " + entry_no + "  " + "|" + course_code + "|" + grade + "|" + status);
-
+                fmt.format("\n %30s | %30s | %30s | %30s | %30s", entry_no, course_code, grade, status);
             }
+
+            System.out.println(fmt);
         }
 
     }
@@ -348,6 +428,10 @@ public class Faculty {
                 st = con.createStatement();
                 x = st.executeUpdate(query);
 
+                if (x == 1) {
+                    System.out.println("Email updated successfully");
+                }
+
             } else if (option == 2) {
                 System.out.println("Enter new " + name_field);
                 String new_name = sc.nextLine();
@@ -355,6 +439,11 @@ public class Faculty {
                 query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Name updated successfully");
+                }
+
             } else if (option == 3) {
                 System.out.println("Enter new " + department_field);
                 String new_dept = sc.nextLine();
@@ -362,6 +451,11 @@ public class Faculty {
                 query = String.format("update auth set department = '%s' where email = '%s'", new_dept, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Department updated successfully");
+                }
+
             } else if (option == 4) {
                 System.out.println("Enter new " + password_field);
                 String new_pass = sc.nextLine();
@@ -369,6 +463,11 @@ public class Faculty {
                 query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Password updated successfully");
+                }
+
             } else if (option == 5) {
                 System.out.println("Enter new " + joining_data_field + " ( Format : YYYY-MM-DD)");
                 String new_doj = sc.nextLine();
@@ -376,6 +475,11 @@ public class Faculty {
                 query = String.format("update auth set joining_date = '%s' where email = '%s' ", new_doj, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Joining date updated successfully");
+                }
+
             } else {
                 break;
             }

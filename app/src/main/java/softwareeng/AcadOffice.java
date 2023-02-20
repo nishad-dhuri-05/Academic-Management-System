@@ -71,7 +71,7 @@ public class AcadOffice {
                 ResultSet rs = st.executeQuery(query);
 
                 Formatter fmt = new Formatter();
-                fmt.format("\n %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES");
+                fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
 
                 while (rs.next()) {
                     String course_code = rs.getString("course_code");
@@ -79,10 +79,11 @@ public class AcadOffice {
                     String t = rs.getString("t");
                     String p = rs.getString("p");
                     String credits = rs.getString("credits");
+                    String department = rs.getString("department");
                     String pre_req = rs.getString("pre_req");
 
                     String ltpc = l + "-" + t + "-" + p + "-" + credits;
-                    fmt.format("\n %20s | %20s | %20s \n", course_code, ltpc, pre_req);
+                    fmt.format("\n %20s | %20s | %20s  | %20s\n", course_code, ltpc, pre_req, department);
 
                 }
 
@@ -91,27 +92,32 @@ public class AcadOffice {
 
             else if (option == 2) {
 
-                String course_code, pre_req;
-                int l, t, p, credits;
+                String course_code, pre_req, department;
+                float l, t, p;
+                float credits;
 
                 System.out.println("\nEnter Course Code \n");
                 Scanner sc1 = new Scanner(System.in);
                 course_code = sc1.nextLine();
 
                 System.out.println("\nEnter Lecture hours \n");
-                l = Integer.parseInt(sc1.nextLine());
+                l = Float.parseFloat(sc1.nextLine());
 
                 System.out.println("\nEnter Tutorial hours \n");
-                t = Integer.parseInt(sc1.nextLine());
+                t = Float.parseFloat(sc1.nextLine());
 
                 System.out.println("\nEnter Practical hours \n");
-                p = Integer.parseInt(sc1.nextLine());
+                p = Float.parseFloat(sc1.nextLine());
 
                 System.out.println("\nEnter Credits \n");
-                credits = Integer.parseInt(sc1.nextLine());
+                credits = Float.parseFloat(sc1.nextLine());
 
-                String query = "insert into course_catalog (course_code,L,T,P,Credits) values ('"
-                        + course_code + "'," + l + "," + t + "," + p + "," + credits + ");";
+                System.out.println("\nEnter Department \n");
+                department = sc1.nextLine();
+
+                String query = String.format(
+                        "insert into course_catalog (course_code,L,T,P,credits,department) values ('%s', %f, %f , %f , %f , '%s');",
+                        course_code, l, t, p, credits, department);
 
                 Statement st = con.createStatement();
                 int x = st.executeUpdate(query);
@@ -132,7 +138,7 @@ public class AcadOffice {
             }
 
             else if (option == 3) {
-                String course_code, pre_req;
+                String course_code, pre_req, department;
                 Float l, t, p, credits;
 
                 System.out.println("Enter Course Code To Update \n");
@@ -144,6 +150,9 @@ public class AcadOffice {
                 Statement st = con.createStatement();
                 ResultSet rs = st.executeQuery(query);
 
+                Formatter fmt = new Formatter();
+                fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
+
                 while (rs.next()) {
                     course_code = rs.getString("course_code");
                     String display_l = rs.getString("l");
@@ -151,10 +160,11 @@ public class AcadOffice {
                     String display_p = rs.getString("p");
                     String display_credits = rs.getString("credits");
                     pre_req = rs.getString("pre_req");
+                    department = rs.getString("department");
 
-                    System.out.println("  " + course_code + "  " + "|" + display_l + "-" + display_t + "-" + display_p
-                            + "-" + display_credits
-                            + "|" + pre_req);
+                    String ltpc = display_l + "-" + display_t + "-" + display_p + "-" + display_credits;
+                    fmt.format("\n %20s | %20s | %20s  | %20s\n", course_code, ltpc, pre_req, department);
+
                 }
 
                 System.out.println("\nEnter Lecture hours \n");
@@ -173,8 +183,12 @@ public class AcadOffice {
                 credits = sc1.nextFloat();
                 sc1.nextLine();
 
+                System.out.println("\nEnter Department \n");
+                department = sc1.nextLine();
+
                 query = "update course_catalog set l=" + l + ", t= " + t + ", p=" + p + ", credits=" + credits
-                        + " where course_code='" + course_code + "';";
+                        + ", department='" + department
+                        + "' where course_code='" + course_code + "';";
 
                 System.out.println(query);
 
@@ -266,7 +280,7 @@ public class AcadOffice {
             Statement st;
 
             if (option == 1) {
-                query = "select * from enrollments where status='COMPLETED'";
+                query = "select * from enrollments where status!='RUNNING'";
 
             } else if (option == 2) {
                 String course_code;
@@ -293,16 +307,19 @@ public class AcadOffice {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(query);
 
-            System.out.println(" Entry_No | Course_code | grade | status ");
+            Formatter fmt = new Formatter();
+            fmt.format("\n %30s | %30s | %30s | %30s \n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
+
             while (rs.next()) {
                 String entry_no = rs.getString("entry_no");
                 String course_code = rs.getString("course_code");
                 String grade = rs.getString("grade");
                 String status = rs.getString("status");
 
-                System.out.println("  " + entry_no + "  " + "|" + course_code + "|" + grade + "|" + status);
-
+                fmt.format("\n %30s | %30s | %30s | %30s", entry_no, course_code, grade, status);
             }
+
+            System.out.println(fmt);
         }
 
     }

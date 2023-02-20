@@ -8,7 +8,7 @@ create table offered_to(
     min_cgpa float(8) NOT NULL,
     type varchar(10),
 
-    PRIMARY KEY(course_code,start_acad_year,semester)
+    PRIMARY KEY(course_code,start_acad_year,semester,batch,offered_dept)
 );
 
 
