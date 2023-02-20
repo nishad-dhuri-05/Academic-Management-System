@@ -16,3 +16,7 @@ values (
     'CS305',2022,2, 'faculty1@iitrpr.ac.in', 'CSE' , 'Running'
 );
 
+
+select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type
+FROM course_offering
+inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;
