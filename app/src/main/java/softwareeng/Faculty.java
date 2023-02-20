@@ -1,11 +1,13 @@
 package softwareeng;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.*;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
-import com.google.common.util.concurrent.Service.State;
 
 public class Faculty {
     public static void main() throws Exception {
@@ -116,7 +118,7 @@ public class Faculty {
             course_dept = rs.getString("department");
         }
 
-        if (!course_dept.equalsIgnoreCase(faculty_dept)) {
+        if (!course_dept.equalsIgnoreCase(faculty_dept) || !course_dept.equalsIgnoreCase("ALL")) {
             System.out.println("Please offer a course from your department only");
         } else {
             query = String.format(
@@ -133,7 +135,7 @@ public class Faculty {
             String type = "";
             Float min_cgpa = (float) 0;
             System.out.println(
-                    "\n====================================================================================\nIf there are multiple restrictions, please enter one by one for each offered department (Batch also has to be specified 2019 CSE is different from 2020 CSE, so multiple restrictions.)\n");
+                    "\n====================================================================================\n\nIf there are multiple restrictions, please enter one by one for each offered department (Batch also has to be specified 2019 CSE is different from 2020 CSE, so multiple restrictions.)\nIf the course is open to all departments in a batch and there is a common cgpa criteria , then you can enter 'ALL' as offered department and specify the batch and cgpa criteria. \n\n====================================================================================\n");
             while (true) {
 
                 System.out.println("\n NEW RESTRICTION \n");
@@ -149,7 +151,7 @@ public class Faculty {
                 min_cgpa = sc.nextFloat();
                 sc.nextLine();
 
-                System.out.println("Enter course type (PC/PE/BTP) ");
+                System.out.println("Enter course type (PC/PE) ");
                 type = sc.nextLine();
 
                 query = String.format(
@@ -239,7 +241,7 @@ public class Faculty {
             query = String.format(
                     "Delete from course_offering where course_code='%s' and start_acad_year=%d and semester=%d and instructor_email='%s';",
                     course_code, current_start_acad_year, current_semester, email);
-            
+
             st = con.createStatement();
             int m = st.executeUpdate(query);
 
@@ -250,13 +252,11 @@ public class Faculty {
             st = con.createStatement();
             int n = st.executeUpdate(query);
 
-            if(m==1 && n==1){
+            if (m == 1 && n == 1) {
                 System.out.println("Course Offering De-Registered Successfully !");
-            }
-            else{
+            } else {
                 System.out.println("Course Offering De-Registration Failed !");
             }
-
 
         }
 
@@ -301,7 +301,119 @@ public class Faculty {
 
     }
 
-    public static void upload_grades() {
+    public static void upload_grades() throws Exception {
+
+        HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
+        grade_map.put("A", 10);
+        grade_map.put("A-", 9);
+        grade_map.put("B", 8);
+        grade_map.put("B-", 7);
+        grade_map.put("C", 6);
+        grade_map.put("C-", 5);
+        grade_map.put("D", 4);
+        grade_map.put("E", 2);
+        grade_map.put("F", 0);
+
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String query = "";
+        Statement st;
+        ResultSet rs;
+
+        // Fetch Calendar
+
+        int current_start_acad_year = 0;
+        int current_semester = 0;
+
+        query = "Select * from calendar ;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+            current_semester = Integer.parseInt(rs.getString("semester"));
+        }
+
+        // Fetch Email
+
+        String email = "";
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        String line = "";
+
+        String course_code = "";
+        String filepath = "";
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the course code for which you want to upload grades");
+        course_code = sc.nextLine();
+
+        query = "select instructor_email from course_offering where course_code = '" + course_code + "' and start_acad_year = "
+                + current_start_acad_year + " and semester = " + current_semester + " and instructor_email = '" + email
+                + "';";
+        
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        String check_email = "";
+
+        while (rs.next()) {
+            check_email = rs.getString("instructor_email");
+        }
+
+        if(!check_email.equals(email)){
+            System.out.println("You are not the instructor for this course offering !");
+        }
+        else{
+                   
+        System.out.println("Enter the Absolute filepath of the CSV file");
+        filepath = sc.nextLine();
+
+        BufferedReader br = new BufferedReader(new FileReader(filepath));
+        while ((line = br.readLine()) != null) // returns a Boolean value
+        {
+            String[] buffer = line.split(","); // use comma as separator
+
+            String entry_no = buffer[0];
+            String grade = buffer[1];
+
+            if(grade_map.get(grade)>4){
+
+                query = String.format(
+                        "update enrollments set grade = '%s', status = 'PASSED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
+                        grade, course_code, current_start_acad_year, current_semester, entry_no);
+            }
+            else{
+                query = String.format(
+                        "update enrollments set grade = '%s', status = 'FAILED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
+                        grade, course_code, current_start_acad_year, current_semester, entry_no);
+            }
+
+            st = con.createStatement();
+            int n = st.executeUpdate(query);
+
+            if (n == 1) {
+                System.out.println("Grades Uploaded Successfully !");
+            } else {
+                System.out.println("Grades Upload Failed !");
+            }
+                       
+        }
+    }
 
     }
 
@@ -359,7 +471,7 @@ public class Faculty {
             ResultSet rs = st.executeQuery(query);
 
             Formatter fmt = new Formatter();
-            fmt.format("\n %30s | %30s | %30s | %30s | %30s \n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
+            fmt.format("\n %30s | %30s | %30s | %30s\n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
 
             while (rs.next()) {
                 String entry_no = rs.getString("entry_no");
@@ -367,7 +479,7 @@ public class Faculty {
                 String grade = rs.getString("grade");
                 String status = rs.getString("status");
 
-                fmt.format("\n %30s | %30s | %30s | %30s | %30s", entry_no, course_code, grade, status);
+                fmt.format("\n %30s | %30s | %30s | %30s", entry_no, course_code, grade, status);
             }
 
             System.out.println(fmt);

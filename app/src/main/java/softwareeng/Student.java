@@ -120,6 +120,8 @@ public class Student {
         Scanner sc = new Scanner(System.in);
         course_code = sc.nextLine();
 
+        
+
         // Check Eligibility
 
         query = String.format(
@@ -156,6 +158,12 @@ public class Student {
                 while (rs.next()) {
 
                     String pre_req_course_code = rs.getString("pre_req");
+
+                    if(pre_req_course_code.equals("NIL"))
+                    {
+                        break;
+                    }
+
                     query = String.format(
                             "select * from enrollments where entry_no = '%s' and course_code = '%s' and status = 'PASSED';",
                             entry_no, pre_req_course_code);
@@ -401,6 +409,8 @@ public class Student {
         grade_map.put("C", 6);
         grade_map.put("C-", 5);
         grade_map.put("D", 4);
+        grade_map.put("E", 2);
+        grade_map.put("F", 0);
 
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and grade!='W' ;",
