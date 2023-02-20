@@ -46,7 +46,7 @@ public class Student {
                 System.out.println("Select a valid option \n");
             }
 
-            System.out.println("\n==================================================");
+            System.out.println("\n**************************************************");
 
         }
 
@@ -192,9 +192,11 @@ public class Student {
         }
         float cgpa = total_points /  total_credits;
 
-        System.out.println(" \n ====================== YOUR CGPA IS : ====================== \n ");
+        System.out.println(String.format(" \n ====================== Entry Num : %s YOUR CGPA IS : ====================== \n ",entry_no));
         System.out.println(cgpa);
-        System.out.println(" \n ============================================================ \n ");
+        System.out.println(" \n ==================================================================================== \n ");
+
+        
 
     }
 

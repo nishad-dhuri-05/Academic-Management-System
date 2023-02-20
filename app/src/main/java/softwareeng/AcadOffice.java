@@ -37,7 +37,7 @@ public class AcadOffice {
                 System.out.println("Select a valid option \n");
             }
 
-            System.out.println("\n==================================================");
+            System.out.println("\n**************************************************");
         }
 
     }
