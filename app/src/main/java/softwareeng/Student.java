@@ -35,7 +35,7 @@ public class Student {
             } else if (option == 3) {
                 view_grades();
             } else if (option == 4) {
-                get_cgpa();
+                float x = get_cgpa();
             } else if (option == 5) {
                 track_grad();
             } else if (option == 6) {
@@ -122,7 +122,7 @@ public class Student {
 
     }
 
-    public static void get_cgpa() throws Exception {
+    public static float get_cgpa() throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
         String url = rd.getString("url"); // localhost:5432
@@ -190,13 +190,16 @@ public class Student {
             total_credits = total_credits + credits;
             total_points = total_points + credits * (grade_map.get(grade));
         }
-        float cgpa = total_points /  total_credits;
+        float cgpa = total_points / total_credits;
 
-        System.out.println(String.format(" \n ====================== Entry Num : %s YOUR CGPA IS : ====================== \n ",entry_no));
-        System.out.println(cgpa);
-        System.out.println(" \n ==================================================================================== \n ");
+        System.out.println(String.format(
+                " \n ==================================================================================== \n "));
+        System.out
+                .println(String.format("                          YOUR CGPA IS %s                             ", cgpa));
+        System.out.println(
+                " \n ==================================================================================== \n ");
 
-        
+        return cgpa;
 
     }
 
@@ -238,26 +241,80 @@ public class Student {
             batch = Integer.parseInt(rs.getString("batch"));
         }
 
+        HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
+        grade_map.put("A", 10);
+        grade_map.put("A-", 9);
+        grade_map.put("B", 8);
+        grade_map.put("B-", 7);
+        grade_map.put("C", 6);
+        grade_map.put("C-", 5);
+        grade_map.put("D", 4);
+
         query = String.format(
-                "select enrollments.course_code,grade,status,type from enrollments,offered_to where entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester ;",
+                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and grade!='W' ;",
                 entry_no);
         st = con.createStatement();
         rs = st.executeQuery(query);
+
+        String course_code = "", grade = "", status = "", type = "";
+        float total_credits = 0, credits = 0;
+        float total_points = 0;
+        int pc_count = 0;
+        int pe_count = 0;
+        int btp_count = 0;
 
         Formatter fmt = new Formatter();
         fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "GRADE", "status", "type");
 
         while (rs.next()) {
-            String course_code = rs.getString("course_code");
-            String grade = rs.getString("grade");
-            String status = rs.getString("status");
-            String type = rs.getString("type");
+            course_code = rs.getString("course_code");
+            grade = rs.getString("grade");
+            status = rs.getString("status");
+            type = rs.getString("type");
+            credits = Float.parseFloat(rs.getString("credits"));
 
             fmt.format("\n %20s | %20s | %20s | %20s \n", course_code, grade, status, type);
 
-        }
+            total_credits = total_credits + credits;
+            total_points = total_points + credits * (grade_map.get(grade));
 
-        System.out.println(fmt);
+            if (course_code.equalsIgnoreCase("CP301") || course_code.equalsIgnoreCase("CP302")) {
+                btp_count = btp_count + 1;
+            }
+
+            if (type.equals("PC")) {
+                pc_count = pc_count + 1;
+            }
+
+            if (type.equals("PE")) {
+                pe_count = pe_count + 1;
+            }
+        }
+        float cgpa = total_points / total_credits;
+
+        if (pc_count >= 20 && pe_count >= 20 && btp_count == 2 && cgpa >= 5) {
+
+            System.out.println(
+                    " \n ==================================================================================== \n ");
+            System.out.println(
+                    "                      CONGRATULATIONS! YOU ARE ELIGIBLE FOR GRADUATION !                    ");
+            System.out.println(
+                    " \n ==================================================================================== \n ");
+
+        } else {
+
+            System.out.println(
+                    " \n ==================================================================================== \n ");
+            System.out.println(
+                    "                                   YOU ARE NOT ELIGIBLE FOR GRADUATION !                    ");
+            System.out.println(
+                    " \n ==================================================================================== \n ");
+
+            System.out.println("Here is your list of completed courses");
+
+            System.out.println(fmt);
+
+        }
 
     }
 
