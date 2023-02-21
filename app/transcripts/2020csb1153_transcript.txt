@@ -1,0 +1,27 @@
+===================================== TRANSCRIPT - 2020csb1153 ===================================== 
+
+                               INDIAN INSTITUTE OF TECHNOLOGY, ROPAR                            
+
+Entry Number : 2020csb1153 
+Batch : 2020 
+Department : CSE 
+
+===================================== COURSES UNDERTAKEN ===================================== 
+
+
+                CS201 |                 2021 |                    1 |                    A |               PASSED 
+
+                CS101 |                 2020 |                    2 |                    A |               PASSED 
+
+                CS306 |                 2022 |                    2 |                 null |              DROPPED 
+
+                CS305 |                 2022 |                    2 |                 null |              DROPPED 
+
+                CS202 |                 2021 |                    2 |                   A- |               PASSED 
+
+                CS301 |                 2022 |                    1 |                   A- |               PASSED 
+===================================== ================= ===================================== 
+
+CGPA : 9.466666
+
+This transcript is generated for all courses till YEAR : 2022 , SEMESTER : 1

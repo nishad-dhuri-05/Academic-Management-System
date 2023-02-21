@@ -334,11 +334,121 @@ public class AcadOffice {
 
     public static void transcript() throws Exception {
 
-        
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String entry_no = "";
+        int batch = 0;
+        String department = "";
+
+        String query = "";
+        Statement st;
+        ResultSet rs;
+
+        System.out.println("Enter student entry no.  \n");
+        Scanner sc = new Scanner(System.in);
+        entry_no = sc.nextLine();
+
+        query = "select * from auth where entry_no = '" + entry_no + "'";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        if (rs.next()) {
+            batch = rs.getInt("batch");
+            department = rs.getString("department");
+        }
+        // String prefix = "C:"+File.separator +"Users" + File.separator +
+        // "subha"+File.separator+"OneDrive"+File.separator+"Desktop"+File.separator+"Acads\CS305\software-eng\CS305-miniproject\app\src\main\files"
+        // ;
+
+        String filename = String.format("transcripts/%s_transcript.txt", entry_no);
+
+        File fileobj = new File(filename);
+        fileobj.createNewFile();
+
+        // if (myObj.createNewFile()) {
+        // System.out.println("File created: " + myObj.getName());
+        // } else {
+        // System.out.println("File already exists.");
+        // }
+
+        FileWriter writer = new FileWriter(filename);
+        writer.write(String.format(
+                "===================================== TRANSCRIPT - %s ===================================== \n\n",
+                entry_no));
+        writer.write(
+                "                               INDIAN INSTITUTE OF TECHNOLOGY, ROPAR                            \n\n");
+        writer.write(
+                String.format("Entry Number : %s \nBatch : %d \nDepartment : %s \n\n", entry_no, batch, department));
+        writer.write(String.format(
+                "===================================== COURSES UNDERTAKEN ===================================== \n\n"));
+
+        query = String.format(
+                "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' ;",
+                entry_no);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        String text = String.format("\n %20s | %20s | %20s| %20s | %20s\n", "COURSE CODE", "ACAD YEAR", "SEMESTER",
+                "GRADE", "STATUS");
+
+        while (rs.next()) {
+            String course_code = rs.getString("course_code");
+            String grade = rs.getString("grade");
+            String status = rs.getString("status");
+            String acad_year = rs.getString("start_acad_year");
+            String semester = rs.getString("semester");
+
+            text = String.format("\n %20s | %20s | %20s | %20s | %20s \n", course_code, acad_year, semester, grade,
+                    status);
+            writer.write(text);
+
+        }
+
+        writer.write(String.format(
+                "===================================== ================= ===================================== \n\n"));
+
+        float cgpa = get_cgpa(entry_no);
+        writer.write("CGPA : " + cgpa);
+
+        // Fetch Calendar
+
+        int current_start_acad_year = 0;
+        int current_semester = 0;
+
+        query = "Select * from calendar ;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+            current_semester = Integer.parseInt(rs.getString("semester"));
+        }
+
+        int prev_acad_year = 0;
+        int prev_semester = 0;
+
+        if (current_semester == 2) {
+            prev_acad_year = current_start_acad_year;
+            prev_semester = 1;
+        } else {
+            prev_acad_year = current_start_acad_year - 1;
+            prev_semester = 2;
+        }
+
+        writer.write(String.format("\n\nThis transcript is generated for all courses till YEAR : %d , SEMESTER : %d",
+                prev_acad_year, prev_semester));
+        writer.close();
 
     }
 
-    public static float get_cgpa() throws Exception {
+    public static float get_cgpa(String entry_no) throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
         String url = rd.getString("url"); // localhost:5432
@@ -348,34 +458,11 @@ public class AcadOffice {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(url, username, password);
 
-        String email = "";
         String query = "";
-        String entry_no = "";
-        String department = "";
-        int batch = 0;
 
         Statement st;
         ResultSet rs;
         int x;
-
-        query = "Select email from logs;";
-
-        st = con.createStatement();
-        rs = st.executeQuery(query);
-
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
-
-        query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
-        rs = st.executeQuery(query);
-
-        while (rs.next()) {
-            entry_no = rs.getString("entry_no");
-            department = rs.getString("department");
-            batch = Integer.parseInt(rs.getString("batch"));
-        }
 
         HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
         grade_map.put("A", 10);
@@ -389,7 +476,7 @@ public class AcadOffice {
         grade_map.put("F", 0);
 
         query = String.format(
-                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and grade!='W' ;",
+                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
                 entry_no);
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -409,13 +496,6 @@ public class AcadOffice {
             total_points = total_points + credits * (grade_map.get(grade));
         }
         float cgpa = total_points / total_credits;
-
-        System.out.println(String.format(
-                " \n ==================================================================================== \n "));
-        System.out
-                .println(String.format("                          YOUR CGPA IS %s                             ", cgpa));
-        System.out.println(
-                " \n ==================================================================================== \n ");
 
         return cgpa;
 
