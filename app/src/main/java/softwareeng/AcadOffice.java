@@ -11,6 +11,24 @@ public class AcadOffice {
 
     public static void main(Connection con) throws Exception {
 
+        String query = "";
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        query = "Select * from logs;";
+
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        rs = st.executeQuery(query);
+
+        String email = "", role = "", logged_in = "";
+
+        while (rs.next()) {
+            email = rs.getString("email");
+            role = rs.getString("role");
+            logged_in = rs.getString("logged_in");
+        }
+
         while (true) {
 
             System.out.println("\n==================================================");
@@ -43,6 +61,13 @@ public class AcadOffice {
             } else if (option == 6) {
                 update_calendar(con);
             } else if (option == 7) {
+                Timestamp logged_out = new Timestamp(System.currentTimeMillis());
+
+                query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
+                        + role
+                        + "' and logged_in = '" + logged_in + "';";
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                x = st.executeUpdate(query);
                 return;
             }
 
