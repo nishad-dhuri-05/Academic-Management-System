@@ -1,6 +1,7 @@
 package softwareeng;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -29,8 +30,13 @@ public class Auth {
 
         if (user_pass.equals(email_pass)) {
 
+            Timestamp logged_in = new Timestamp(System.currentTimeMillis());
+            
+            System.out.println("LOGGED IN TIME : " + logged_in);
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            query = "truncate table logs; insert into logs(email,role) values ('" + email + "','" + role + "');";
+
+            query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
+                    + "');";
             int m = st.executeUpdate(query);
 
             System.out.println("\n==================================================\n Welcome " + user_name);

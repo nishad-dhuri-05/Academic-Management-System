@@ -500,7 +500,6 @@ public class AcadOffice {
 
             rs.last();
             email = rs.getString("email");
-            
 
             if (option == 1) {
                 System.out.println("Enter new " + phone_number);
@@ -545,28 +544,33 @@ public class AcadOffice {
     }
 
     public static void view_logs(Connection con) throws Exception {
-            
-            String query = "";
-            Statement st;
-            ResultSet rs;
-            int x;
-    
-            query = "Select * from logs;";
-    
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
-    
-            String email = "", role = "";
-            
-            while (rs.next()) {
-                email = rs.getString("email");
-                role = rs.getString("role");
-            }
-    
-            System.out.println(" \n Logged in as : " + email);
-            System.out.println(" \n Role : " + role);
 
-    
+        String query = "";
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        query = "Select * from logs;";
+
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        rs = st.executeQuery(query);
+
+        String email = "", role = "", logged_in = "", logged_out = "";
+
+        Formatter fmt = new Formatter();
+        fmt.format("\n %30s | %15s | %30s | %30s \n", "EMAIL", "ROLE", "LOGGED IN TIME", "LOGGED OUT TIME");
+
+        while (rs.next()) {
+            email = rs.getString("email");
+            role = rs.getString("role");
+            logged_in = rs.getString("logged_in");
+            logged_out = rs.getString("logged_out");
+
+            fmt.format("\n %30s | %15s | %30s | %30s \n", email, role, logged_in, logged_out);
+        }
+
+        System.out.println(fmt);
+
     }
 
     public static void update_calendar(Connection con) throws Exception {
