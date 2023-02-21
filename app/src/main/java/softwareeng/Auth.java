@@ -19,7 +19,7 @@ public class Auth {
         String user_pass = sc.nextLine();
 
         String query = "select name,role,password from auth where email='" + email + "'";
-        Statement st = con.createStatement();
+        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         ResultSet rs = st.executeQuery(query);
         while (rs.next()) {
             role = rs.getString("role");
@@ -29,7 +29,7 @@ public class Auth {
 
         if (user_pass.equals(email_pass)) {
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             query = "truncate table logs; insert into logs(email,role) values ('" + email + "','" + role + "');";
             int m = st.executeUpdate(query);
 

@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Student {
     public static void main(Connection con) throws Exception {
 
-        
         while (true) {
 
             System.out.println("\n==================================================");
@@ -71,7 +70,7 @@ public class Student {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -103,15 +102,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -148,7 +146,7 @@ public class Student {
                 "select credits from enrollments,course_catalog where entry_no = '%s' and start_acad_year= %d and semester = %d and enrollments.course_code = course_catalog.course_code and status = 'RUNNING';",
                 entry_no, current_start_acad_year, current_semester);
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -163,14 +161,14 @@ public class Student {
         Scanner sc = new Scanner(System.in);
         course_code = sc.nextLine();
 
-        int course_credit = 0;
+        float course_credit = 0;
         query = "Select credits from course_catalog where course_code = '" + course_code + "';";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
-            course_credit = Integer.parseInt(rs.getString("credits"));
+            course_credit = Float.parseFloat(rs.getString("credits"));
         }
 
         // Check Eligibility
@@ -184,7 +182,7 @@ public class Student {
                     course_code, current_start_acad_year, current_semester, department, batch);
 
             // System.out.println(query);
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = st.executeQuery(query);
 
             if (!rs.isBeforeFirst()) {
@@ -206,7 +204,7 @@ public class Student {
                     // Check pre-reqs
 
                     query = String.format("select * from pre_reqs where course_code = '%s';", course_code);
-                    st = con.createStatement();
+                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     rs = st.executeQuery(query);
 
                     int flag = 0;
@@ -222,7 +220,7 @@ public class Student {
                                 "select * from enrollments where entry_no = '%s' and course_code = '%s' and status = 'PASSED';",
                                 entry_no, pre_req_course_code);
 
-                        st = con.createStatement();
+                        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                         ResultSet rs2 = st.executeQuery(query);
 
                         if (!rs2.isBeforeFirst()) {
@@ -251,7 +249,7 @@ public class Student {
                         "insert into enrollments (entry_no,course_code,status,start_acad_year,semester) values ( '%s' , '%s' , 'RUNNING' , %d, %d);",
                         entry_no, course_code, current_start_acad_year, current_semester);
 
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -284,7 +282,7 @@ public class Student {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -296,15 +294,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -324,7 +321,7 @@ public class Student {
                 "select * from enrollments where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                 entry_no, course_code, current_start_acad_year, current_semester);
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         if (!rs.isBeforeFirst()) {
@@ -335,7 +332,7 @@ public class Student {
                     "update enrollments set status = 'DROPPED' where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                     entry_no, course_code, current_start_acad_year, current_semester);
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             x = st.executeUpdate(query);
 
             if (x == 1) {
@@ -361,15 +358,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -381,7 +377,7 @@ public class Student {
         query = String.format(
                 "select enrollments.course_code,grade,status,type from enrollments,offered_to where entry_no = '%s' and batch = %d and offered_dept= '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester ;",
                 entry_no, batch, department);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         Formatter fmt = new Formatter();
@@ -415,15 +411,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -446,7 +441,7 @@ public class Student {
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED';",
                 entry_no);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String course_code = "", grade = "", status = "", type = "";
@@ -490,15 +485,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -519,7 +513,7 @@ public class Student {
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
                 entry_no);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String course_code = "", grade = "", status = "", type = "";
@@ -611,19 +605,18 @@ public class Student {
 
             query = "Select email from logs;";
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = st.executeQuery(query);
 
-            while (rs.next()) {
-                email = rs.getString("email");
-            }
+            rs.last();
+            email = rs.getString("email");
 
             if (option == 1) {
-                System.out.println("Enter new " + phone_number );
+                System.out.println("Enter new " + phone_number);
                 String new_number = sc.nextLine();
 
                 query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -635,7 +628,7 @@ public class Student {
                 String new_name = sc.nextLine();
 
                 query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -647,7 +640,7 @@ public class Student {
                 String new_pass = sc.nextLine();
 
                 query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -672,7 +665,7 @@ public class Student {
                 +
                 "FROM course_offering " +
                 "inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         Formatter fmt = new Formatter();
@@ -711,15 +704,14 @@ public class Student {
 
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -742,7 +734,7 @@ public class Student {
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where enrollments.start_acad_year =%d and enrollments.semester=%d and course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='DROPPED' and status!='INSTRUCTOR WITHDREW' ;",
                 acad_year, semester, entry_no);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String course_code = "", grade = "", status = "", type = "";

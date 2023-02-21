@@ -66,7 +66,7 @@ public class Faculty {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -79,18 +79,17 @@ public class Faculty {
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         // Department Check
 
         String course_dept = "", faculty_dept = "";
         query = "Select department from auth where email='" + email + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -102,7 +101,7 @@ public class Faculty {
         String course_code = sc.nextLine();
 
         query = "Select department from course_catalog where course_code='" + course_code + "';";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -116,7 +115,7 @@ public class Faculty {
                     "Insert into course_offering(course_code,start_acad_year,semester,instructor_email,offering_dept,status) values ('%s','%d','%d','%s','%s','%s');",
                     course_code, current_start_acad_year, current_semester, email, course_dept, "RUNNING");
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int m = st.executeUpdate(query);
 
             System.out.println(
@@ -150,7 +149,7 @@ public class Faculty {
                         course_code, current_start_acad_year, current_semester, offered_dept, batch, min_cgpa, type);
 
                 System.out.println(query);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 int x = st.executeUpdate(query);
 
                 String confirmation = "";
@@ -184,7 +183,7 @@ public class Faculty {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -197,12 +196,11 @@ public class Faculty {
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         // Department Check
 
@@ -214,7 +212,7 @@ public class Faculty {
                 "select * from course_offering where course_code = '%s' and start_acad_year = %d and semester = %d and instructor_email = '%s';",
                 course_code, current_start_acad_year, current_semester, email);
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         if (!rs.isBeforeFirst()) {
@@ -225,14 +223,14 @@ public class Faculty {
                     "Delete from course_offering where course_code='%s' and start_acad_year=%d and semester=%d and instructor_email='%s';",
                     course_code, current_start_acad_year, current_semester, email);
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int m = st.executeUpdate(query);
 
             query = String.format(
                     "update enrollments set status = 'INSTRUCTOR WITHDREW' where course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                     course_code, current_start_acad_year, current_semester);
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int n = st.executeUpdate(query);
 
             if (m == 1 && n == 1) {
@@ -252,7 +250,7 @@ public class Faculty {
         ResultSet rs;
 
         query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         Formatter fmt = new Formatter();
@@ -300,7 +298,7 @@ public class Faculty {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -313,12 +311,11 @@ public class Faculty {
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
-        while (rs.next()) {
-            email = rs.getString("email");
-        }
+        rs.last();
+        email = rs.getString("email");
 
         String line = "";
 
@@ -334,7 +331,7 @@ public class Faculty {
                 + current_start_acad_year + " and semester = " + current_semester + " and instructor_email = '" + email
                 + "';";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String check_email = "";
@@ -369,7 +366,7 @@ public class Faculty {
                             grade, course_code, current_start_acad_year, current_semester, entry_no);
                 }
 
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 int n = st.executeUpdate(query);
 
                 if (n == 1) {
@@ -426,7 +423,7 @@ public class Faculty {
                 return;
             }
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = st.executeQuery(query);
 
             Formatter fmt = new Formatter();
@@ -477,19 +474,18 @@ public class Faculty {
 
             query = "Select email from logs;";
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             rs = st.executeQuery(query);
 
-            while (rs.next()) {
-                email = rs.getString("email");
-            }
+            rs.last();
+            email = rs.getString("email");
 
             if (option == 1) {
                 System.out.println("Enter new " + phone_number_field);
                 String new_phone_number = sc.nextLine();
 
                 query = String.format("update auth set email = '%s' where email = '%s' ", new_phone_number, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -501,7 +497,7 @@ public class Faculty {
                 String new_name = sc.nextLine();
 
                 query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -513,7 +509,7 @@ public class Faculty {
                 String new_dept = sc.nextLine();
 
                 query = String.format("update auth set department = '%s' where email = '%s'", new_dept, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -525,7 +521,7 @@ public class Faculty {
                 String new_pass = sc.nextLine();
 
                 query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
@@ -537,7 +533,7 @@ public class Faculty {
                 String new_doj = sc.nextLine();
 
                 query = String.format("update auth set joining_date = '%s' where email = '%s' ", new_doj, email);
-                st = con.createStatement();
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
