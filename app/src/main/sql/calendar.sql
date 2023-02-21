@@ -1,7 +1,8 @@
 create table calendar (
     start_acad_year int,
-    semester int
+    semester int,
+    status VARCHAR(20)
 );
 
-insert into calendar(start_acad_year , semester) 
-values (2022,2);
+insert into calendar
+values (2022,1,'RUNNING');

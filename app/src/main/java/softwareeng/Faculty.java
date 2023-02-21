@@ -88,7 +88,7 @@ public class Faculty {
         int current_start_acad_year = 0;
         int current_semester = 0;
 
-        query = "Select * from calendar ;";
+        query = "Select * from calendar where status='RUNNING' ;";
 
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
@@ -205,7 +205,7 @@ public class Faculty {
         int current_start_acad_year = 0;
         int current_semester = 0;
 
-        query = "Select * from calendar ;";
+        query = "Select * from calendar where status='RUNNING' ;";
 
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
@@ -320,7 +320,7 @@ public class Faculty {
         int current_start_acad_year = 0;
         int current_semester = 0;
 
-        query = "Select * from calendar ;";
+        query = "Select * from calendar where status='RUNNING';";
 
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);

@@ -419,7 +419,7 @@ public class AcadOffice {
         int current_start_acad_year = 0;
         int current_semester = 0;
 
-        query = "Select * from calendar ;";
+        query = "Select * from calendar where status='RUNNING' ;";
 
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
@@ -599,6 +599,52 @@ public class AcadOffice {
     }
 
     public static void update_calendar(Connection con) throws Exception {
+        String query = "";
+        Statement st;
+        ResultSet rs;
+
+        query = "select * from calendar;";
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        rs = st.executeQuery(query);
+
+        String start_acad_year = "", semester = "", status = "";
+
+        Formatter fmt = new Formatter();
+        fmt.format("\n %30s | %15s | %20s \n", "ACADEMIC YEAR", "SEMESTER", "STATUS");
+
+        while (rs.next()) {
+            start_acad_year = rs.getString("start_acad_year");
+            semester = rs.getString("semester");
+            status = rs.getString("status");
+
+            int acad_year = Integer.parseInt(start_acad_year);
+            int next_acad_year = acad_year + 1;
+
+            String academic_year = start_acad_year + "-" + next_acad_year;
+            
+            fmt.format("\n %30s | %15s | %20s \n", academic_year, semester, status);
+        }
+
+        System.out.println(fmt);
+
+        System.out.println("Enter new start academic year");
+        Scanner sc = new Scanner(System.in);
+        String new_start_acad_year = sc.nextLine();
+
+        System.out.println("Enter new semester");
+        String new_semester = sc.nextLine();
+
+        query = String.format(
+                "update calendar set status='COMPLETED' where status='RUNNING' ; insert into calendar values ('%s','%s','RUNNING'); ",
+                new_start_acad_year, new_semester);
+
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        int x = st.executeUpdate(query);
+
+        if (x == 1) {
+            System.out.println("Calendar updated successfully");
+        }
+
     }
 
 }
