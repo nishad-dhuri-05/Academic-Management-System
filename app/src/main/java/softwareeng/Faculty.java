@@ -1,17 +1,16 @@
 package softwareeng;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Faculty {
-    public static void main() throws Exception {
+    public static void main(Connection con) throws Exception {
 
+        
         while (true) {
 
             System.out.println("\n==================================================");
@@ -32,17 +31,17 @@ public class Faculty {
             sc.nextLine();
 
             if (option == 1) {
-                register_course_offering();
+                register_course_offering(con);
             } else if (option == 2) {
-                deregister_course_offering();
+                deregister_course_offering(con);
             } else if (option == 3) {
-                view_catalog();
+                view_catalog(con);
             } else if (option == 4) {
-                upload_grades();
+                upload_grades(con);
             } else if (option == 5) {
-                view_grades();
+                view_grades(con);
             } else if (option == 6) {
-                update_profile();
+                update_profile(con);
             } else if (option == 7) {
                 return;
             } else {
@@ -54,16 +53,8 @@ public class Faculty {
 
     }
 
-    public static void register_course_offering() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
-
+    public static void register_course_offering(Connection con) throws Exception {
+       
         String query = "";
         Statement st;
         ResultSet rs;
@@ -140,7 +131,7 @@ public class Faculty {
 
                 System.out.println("\n NEW RESTRICTION \n");
 
-                System.out.println("Enter offered Department");
+                System.out.println("Enter offered Department ('CSE' , 'MA' , 'EE' , 'ME' , 'CE' , 'CH' , 'MME' , 'HS' , 'PH' , 'BME') ");
                 offered_dept = sc.nextLine();
 
                 System.out.println("Enter corresponding offered department's batch");
@@ -180,15 +171,7 @@ public class Faculty {
 
     }
 
-    public static void deregister_course_offering() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void deregister_course_offering(Connection con) throws Exception {
 
         String query = "";
         Statement st;
@@ -262,15 +245,7 @@ public class Faculty {
 
     }
 
-    public static void view_catalog() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void view_catalog(Connection con) throws Exception {
 
         String query = "";
         Statement st;
@@ -301,7 +276,7 @@ public class Faculty {
 
     }
 
-    public static void upload_grades() throws Exception {
+    public static void upload_grades(Connection con) throws Exception {
 
         HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
         grade_map.put("A", 10);
@@ -313,14 +288,6 @@ public class Faculty {
         grade_map.put("D", 4);
         grade_map.put("E", 2);
         grade_map.put("F", 0);
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
 
         String query = "";
         Statement st;
@@ -416,15 +383,8 @@ public class Faculty {
 
     }
 
-    public static void view_grades() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
-
+    public static void view_grades(Connection con) throws Exception {
+    
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -486,25 +446,18 @@ public class Faculty {
 
     }
 
-    public static void update_profile() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void update_profile(Connection con) throws Exception {
 
         while (true) {
 
-            String email_field = "email";
+            String phone_number_field = "phone_number";
             String name_field = "name";
             String department_field = "department";
             String password_field = "password";
             String joining_data_field = "joining_date";
 
             System.out.println(" \n Select field to update : ");
-            System.out.println("1. " + email_field);
+            System.out.println("1. " + phone_number_field);
             System.out.println("2. " + name_field);
             System.out.println("3. " + department_field);
             System.out.println("4. " + password_field);
@@ -532,15 +485,15 @@ public class Faculty {
             }
 
             if (option == 1) {
-                System.out.println("Enter new " + email_field);
-                String new_email = sc.nextLine();
+                System.out.println("Enter new " + phone_number_field);
+                String new_phone_number = sc.nextLine();
 
-                query = String.format("update auth set email = '%s' where email = '%s' ", new_email, email);
+                query = String.format("update auth set email = '%s' where email = '%s' ", new_phone_number, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
-                    System.out.println("Email updated successfully");
+                    System.out.println("Phone number updated successfully");
                 }
 
             } else if (option == 2) {

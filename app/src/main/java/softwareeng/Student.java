@@ -3,12 +3,12 @@ package softwareeng;
 import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Student {
-    public static void main() throws Exception {
+    public static void main(Connection con) throws Exception {
 
+        
         while (true) {
 
             System.out.println("\n==================================================");
@@ -29,17 +29,17 @@ public class Student {
             sc.nextLine();
 
             if (option == 1) {
-                coursereg();
+                coursereg(con);
             } else if (option == 2) {
-                coursedereg();
+                coursedereg(con);
             } else if (option == 3) {
-                view_grades();
+                view_grades(con);
             } else if (option == 4) {
-                float x = get_cgpa();
+                float x = get_cgpa(con);
             } else if (option == 5) {
-                track_grad();
+                track_grad(con);
             } else if (option == 6) {
-                update_profile();
+                update_profile(con);
             } else if (option == 7) {
                 return;
             } else {
@@ -52,15 +52,7 @@ public class Student {
 
     }
 
-    public static void coursereg() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void coursereg(Connection con) throws Exception {
 
         String email = "";
         String query = "";
@@ -128,22 +120,23 @@ public class Student {
             batch = Integer.parseInt(rs.getString("batch"));
         }
 
-        float student_cgpa = get_cgpa();
+        float student_cgpa = get_cgpa(con);
         int eligible = -1;
 
-        view_offerings();
+        view_offerings(con);
 
         // Get Credit Limit
 
         float credit_limit = 0;
         credit_limit = (float) (1.25
-                * ((get_credits(prev_acad_year, prev_semester) + get_credits(prev_prev_acad_year, prev_prev_semester))
+                * ((get_credits(prev_acad_year, prev_semester, con)
+                        + get_credits(prev_prev_acad_year, prev_prev_semester, con))
                         / 2));
 
         System.out.println(String.format(
                 "Previous two semesters credits : \n YEAR : %d SEM : %d Credits : %f \n YEAR : %d SEM : %d Credits : %f ",
-                prev_acad_year, prev_semester, get_credits(prev_acad_year, prev_semester), prev_prev_acad_year,
-                prev_prev_semester, get_credits(prev_prev_acad_year, prev_prev_semester)));
+                prev_acad_year, prev_semester, get_credits(prev_acad_year, prev_semester, con), prev_prev_acad_year,
+                prev_prev_semester, get_credits(prev_prev_acad_year, prev_prev_semester, con)));
 
         System.out.println("Credit Limit :" + credit_limit);
 
@@ -272,15 +265,7 @@ public class Student {
         }
     }
 
-    public static void coursedereg() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void coursedereg(Connection con) throws Exception {
 
         String email = "";
         String query = "";
@@ -362,15 +347,7 @@ public class Student {
         }
     }
 
-    public static void view_grades() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void view_grades(Connection con) throws Exception {
 
         String email = "";
         String query = "";
@@ -424,15 +401,7 @@ public class Student {
 
     }
 
-    public static float get_cgpa() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static float get_cgpa(Connection con) throws Exception {
 
         String email = "";
         String query = "";
@@ -507,14 +476,7 @@ public class Student {
 
     }
 
-    public static void track_grad() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void track_grad(Connection con) throws Exception {
 
         String email = "";
         String query = "";
@@ -622,30 +584,19 @@ public class Student {
 
     }
 
-    public static void update_profile() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void update_profile(Connection con) throws Exception {
 
         while (true) {
 
-            String email_field = "email";
+            String phone_number = "phone_number";
             String name_field = "name";
-            String department_field = "department";
             String password_field = "password";
-            String joining_data_field = "joining_date";
 
             System.out.println(" \n Select field to update : ");
-            System.out.println("1. " + email_field);
+            System.out.println("1. " + phone_number);
             System.out.println("2. " + name_field);
-            System.out.println("3. " + department_field);
-            System.out.println("4. " + password_field);
-            System.out.println("5. " + joining_data_field);
-            System.out.println("6. Go Back ");
+            System.out.println("3. " + password_field);
+            System.out.println("4. Go Back ");
 
             int option = 0;
             Scanner sc = new Scanner(System.in);
@@ -668,15 +619,15 @@ public class Student {
             }
 
             if (option == 1) {
-                System.out.println("Enter new " + email_field);
-                String new_email = sc.nextLine();
+                System.out.println("Enter new " + phone_number );
+                String new_number = sc.nextLine();
 
-                query = String.format("update auth set email = '%s' where email = '%s' ", new_email, email);
+                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
                 st = con.createStatement();
                 x = st.executeUpdate(query);
 
                 if (x == 1) {
-                    System.out.println("Email updated successfully");
+                    System.out.println("Phone Number updated successfully");
                 }
 
             } else if (option == 2) {
@@ -692,18 +643,6 @@ public class Student {
                 }
 
             } else if (option == 3) {
-                System.out.println("Enter new " + department_field);
-                String new_dept = sc.nextLine();
-
-                query = String.format("update auth set department = '%s' where email = '%s'", new_dept, email);
-                st = con.createStatement();
-                x = st.executeUpdate(query);
-
-                if (x == 1) {
-                    System.out.println("Department updated successfully");
-                }
-
-            } else if (option == 4) {
                 System.out.println("Enter new " + password_field);
                 String new_pass = sc.nextLine();
 
@@ -715,18 +654,6 @@ public class Student {
                     System.out.println("Password updated successfully");
                 }
 
-            } else if (option == 5) {
-                System.out.println("Enter new " + joining_data_field + " ( Format : YYYY-MM-DD)");
-                String new_doj = sc.nextLine();
-
-                query = String.format("update auth set joining_date = '%s' where email = '%s' ", new_doj, email);
-                st = con.createStatement();
-                x = st.executeUpdate(query);
-
-                if (x == 1) {
-                    System.out.println("Joining date updated successfully");
-                }
-
             } else {
                 break;
             }
@@ -735,15 +662,7 @@ public class Student {
 
     }
 
-    public static void view_offerings() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void view_offerings(Connection con) throws Exception {
 
         String query = "";
         Statement st;
@@ -778,15 +697,7 @@ public class Student {
 
     }
 
-    public static float get_credits(int acad_year, int semester) throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static float get_credits(int acad_year, int semester, Connection con) throws Exception {
 
         String email = "";
         String query = "";

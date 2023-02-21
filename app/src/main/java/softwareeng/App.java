@@ -5,21 +5,28 @@ package softwareeng;
 
 import java.sql.*;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
 
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
         while (true) {
             String role = "";
-            role = Auth.main();
+            role = Auth.main(con);
 
             if (role.equals("acad")) {
-                AcadOffice.main();
+                AcadOffice.main(con);
             } else if (role.equals("faculty")) {
-                Faculty.main();
+                Faculty.main(con);
             } else if (role.equals("student")) {
-                Student.main();
+                Student.main(con);
             } else {
                 System.out.println("Logged out");
             }

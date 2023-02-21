@@ -2,20 +2,14 @@ package softwareeng;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.Scanner;
-
-import com.google.common.io.Files;
 
 public class AcadOffice {
 
-    public static void main() throws Exception {
+    public static void main(Connection con) throws Exception {
 
         while (true) {
 
@@ -34,11 +28,11 @@ public class AcadOffice {
             sc.nextLine();
 
             if (option == 1) {
-                catalog();
+                catalog(con);
             } else if (option == 2) {
-                view_grades();
+                view_grades(con);
             } else if (option == 3) {
-                transcript();
+                transcript(con);
             } else if (option == 4) {
                 return;
             } else {
@@ -50,14 +44,7 @@ public class AcadOffice {
 
     }
 
-    public static void catalog() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void catalog(Connection con) throws Exception {
 
         while (true) {
 
@@ -120,7 +107,8 @@ public class AcadOffice {
                 System.out.println("\nEnter Credits \n");
                 credits = Float.parseFloat(sc1.nextLine());
 
-                System.out.println("\nEnter Department \n");
+                System.out.println(
+                        "\nEnter Department ('CSE' , 'MA' , 'EE' , 'ME' , 'CE' , 'CH' , 'MME' , 'HS' , 'PH' , 'BME') \n");
                 department = sc1.nextLine();
 
                 String query = String.format(
@@ -191,7 +179,8 @@ public class AcadOffice {
                 credits = sc1.nextFloat();
                 sc1.nextLine();
 
-                System.out.println("\nEnter Department \n");
+                System.out.println(
+                        "\nEnter Department ('CSE' , 'MA' , 'EE' , 'ME' , 'CE' , 'CH' , 'MME' , 'HS' , 'PH' , 'BME')\n");
                 department = sc1.nextLine();
 
                 query = "update course_catalog set l=" + l + ", t= " + t + ", p=" + p + ", credits=" + credits
@@ -262,14 +251,7 @@ public class AcadOffice {
 
     }
 
-    public static void view_grades() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void view_grades(Connection con) throws Exception {
 
         while (true) {
 
@@ -332,15 +314,7 @@ public class AcadOffice {
 
     }
 
-    public static void transcript() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static void transcript(Connection con) throws Exception {
 
         String entry_no = "";
         int batch = 0;
@@ -362,20 +336,11 @@ public class AcadOffice {
             batch = rs.getInt("batch");
             department = rs.getString("department");
         }
-        // String prefix = "C:"+File.separator +"Users" + File.separator +
-        // "subha"+File.separator+"OneDrive"+File.separator+"Desktop"+File.separator+"Acads\CS305\software-eng\CS305-miniproject\app\src\main\files"
-        // ;
 
         String filename = String.format("transcripts/%s_transcript.txt", entry_no);
 
         File fileobj = new File(filename);
         fileobj.createNewFile();
-
-        // if (myObj.createNewFile()) {
-        // System.out.println("File created: " + myObj.getName());
-        // } else {
-        // System.out.println("File already exists.");
-        // }
 
         FileWriter writer = new FileWriter(filename);
         writer.write(String.format(
@@ -386,10 +351,10 @@ public class AcadOffice {
         writer.write(
                 String.format("Entry Number : %s \nBatch : %d \nDepartment : %s \n\n", entry_no, batch, department));
         writer.write(String.format(
-                "===================================== COURSES UNDERTAKEN ===================================== \n\n"));
+                "========================================== COURSES UNDERTAKEN ========================================== \n\n"));
 
         query = String.format(
-                "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' ;",
+                "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED' ;",
                 entry_no);
         st = con.createStatement();
         rs = st.executeQuery(query);
@@ -410,10 +375,7 @@ public class AcadOffice {
 
         }
 
-        writer.write(String.format(
-                "===================================== ================= ===================================== \n\n"));
-
-        float cgpa = get_cgpa(entry_no);
+        float cgpa = get_cgpa(entry_no, con);
         writer.write("CGPA : " + cgpa);
 
         // Fetch Calendar
@@ -446,17 +408,11 @@ public class AcadOffice {
                 prev_acad_year, prev_semester));
         writer.close();
 
+        System.out.println("Transcript generated successfully. \n");
+
     }
 
-    public static float get_cgpa(String entry_no) throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static float get_cgpa(String entry_no, Connection con) throws Exception {
 
         String query = "";
 

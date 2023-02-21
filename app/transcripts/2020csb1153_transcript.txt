@@ -13,10 +13,6 @@ Department : CSE
 
                 CS101 |                 2020 |                    2 |                    A |               PASSED 
 
-                CS306 |                 2022 |                    2 |                 null |              DROPPED 
-
-                CS305 |                 2022 |                    2 |                 null |              DROPPED 
-
                 CS202 |                 2021 |                    2 |                   A- |               PASSED 
 
                 CS301 |                 2022 |                    1 |                   A- |               PASSED 

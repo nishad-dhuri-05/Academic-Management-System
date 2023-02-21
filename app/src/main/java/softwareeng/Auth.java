@@ -5,14 +5,7 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Auth {
-    public static String main() throws Exception {
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
+    public static String main(Connection con) throws Exception {
 
         String role = "";
         String email = "";
@@ -37,16 +30,15 @@ public class Auth {
         if (user_pass.equals(email_pass)) {
 
             st = con.createStatement();
-            query = "truncate table logs; insert into logs(email,role) values ('"+email+"','"+role+"');";
+            query = "truncate table logs; insert into logs(email,role) values ('" + email + "','" + role + "');";
             int m = st.executeUpdate(query);
-            
 
             System.out.println("\n==================================================\n Welcome " + user_name);
             System.out.println("You are logged in as " + role);
             System.out.println("==================================================");
         } else {
             System.out.println("Login Failed");
-            role="";
+            role = "";
         }
         return role;
     }
