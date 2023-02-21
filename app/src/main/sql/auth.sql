@@ -10,7 +10,7 @@ create table auth(
 );
 
 insert into auth(email,role,name,password)
-values ('acad@iitrpr.ac.in', 'acad' , 'acad office','acadpass');
+values ('acad@iitrpr.ac.in', 'acad' , 'Staff Dean office','acadpass');
 
 insert into auth(email,role,name,password,department)
 values ('faculty1@iitrpr.ac.in', 'faculty', 'faculty1','faculty1pass','CSE');
