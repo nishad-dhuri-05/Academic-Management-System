@@ -33,6 +33,10 @@ insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semes
 values ('2020csb1317', 'CS201', 'A-', 'PASSED', 2021,1 );
 insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
 values ('2020csb1106', 'CS201', 'A-','PASSED' , 2021,1);
+insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
+values ('2020csb1153', 'CS202', 'A-','PASSED' , 2021,2);
+insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
+values ('2020csb1153', 'CS301', 'A-','PASSED' , 2022,1);
 
 
 

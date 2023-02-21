@@ -118,7 +118,7 @@ public class Faculty {
             course_dept = rs.getString("department");
         }
 
-        if (!course_dept.equalsIgnoreCase(faculty_dept) || !course_dept.equalsIgnoreCase("ALL")) {
+        if (!course_dept.equalsIgnoreCase(faculty_dept) && !course_dept.equalsIgnoreCase("ALL")) {
             System.out.println("Please offer a course from your department only");
         } else {
             query = String.format(
@@ -362,10 +362,11 @@ public class Faculty {
         System.out.println("Enter the course code for which you want to upload grades");
         course_code = sc.nextLine();
 
-        query = "select instructor_email from course_offering where course_code = '" + course_code + "' and start_acad_year = "
+        query = "select instructor_email from course_offering where course_code = '" + course_code
+                + "' and start_acad_year = "
                 + current_start_acad_year + " and semester = " + current_semester + " and instructor_email = '" + email
                 + "';";
-        
+
         st = con.createStatement();
         rs = st.executeQuery(query);
 
@@ -375,45 +376,43 @@ public class Faculty {
             check_email = rs.getString("instructor_email");
         }
 
-        if(!check_email.equals(email)){
+        if (!check_email.equals(email)) {
             System.out.println("You are not the instructor for this course offering !");
+        } else {
+
+            System.out.println("Enter the Absolute filepath of the CSV file");
+            filepath = sc.nextLine();
+
+            BufferedReader br = new BufferedReader(new FileReader(filepath));
+            while ((line = br.readLine()) != null) // returns a Boolean value
+            {
+                String[] buffer = line.split(","); // use comma as separator
+
+                String entry_no = buffer[0];
+                String grade = buffer[1];
+
+                if (grade_map.get(grade) > 4) {
+
+                    query = String.format(
+                            "update enrollments set grade = '%s', status = 'PASSED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
+                            grade, course_code, current_start_acad_year, current_semester, entry_no);
+                } else {
+                    query = String.format(
+                            "update enrollments set grade = '%s', status = 'FAILED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
+                            grade, course_code, current_start_acad_year, current_semester, entry_no);
+                }
+
+                st = con.createStatement();
+                int n = st.executeUpdate(query);
+
+                if (n == 1) {
+                    System.out.println("Grades Uploaded Successfully !");
+                } else {
+                    System.out.println("Grades Upload Failed !");
+                }
+
+            }
         }
-        else{
-                   
-        System.out.println("Enter the Absolute filepath of the CSV file");
-        filepath = sc.nextLine();
-
-        BufferedReader br = new BufferedReader(new FileReader(filepath));
-        while ((line = br.readLine()) != null) // returns a Boolean value
-        {
-            String[] buffer = line.split(","); // use comma as separator
-
-            String entry_no = buffer[0];
-            String grade = buffer[1];
-
-            if(grade_map.get(grade)>4){
-
-                query = String.format(
-                        "update enrollments set grade = '%s', status = 'PASSED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
-                        grade, course_code, current_start_acad_year, current_semester, entry_no);
-            }
-            else{
-                query = String.format(
-                        "update enrollments set grade = '%s', status = 'FAILED' where course_code = '%s' and start_acad_year = %d and semester = %d and entry_no = '%s';",
-                        grade, course_code, current_start_acad_year, current_semester, entry_no);
-            }
-
-            st = con.createStatement();
-            int n = st.executeUpdate(query);
-
-            if (n == 1) {
-                System.out.println("Grades Uploaded Successfully !");
-            } else {
-                System.out.println("Grades Upload Failed !");
-            }
-                       
-        }
-    }
 
     }
 
@@ -599,4 +598,6 @@ public class Faculty {
         }
 
     }
+
+    
 }

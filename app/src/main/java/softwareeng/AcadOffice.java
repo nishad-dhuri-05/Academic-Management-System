@@ -1,9 +1,17 @@
 package softwareeng;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+
+import com.google.common.io.Files;
 
 public class AcadOffice {
 
@@ -324,7 +332,92 @@ public class AcadOffice {
 
     }
 
-    public static void transcript() {
+    public static void transcript() throws Exception {
+
+        
+
+    }
+
+    public static float get_cgpa() throws Exception {
+
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String email = "";
+        String query = "";
+        String entry_no = "";
+        String department = "";
+        int batch = 0;
+
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        query = "Select * from auth where email= '" + email + "';";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            entry_no = rs.getString("entry_no");
+            department = rs.getString("department");
+            batch = Integer.parseInt(rs.getString("batch"));
+        }
+
+        HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
+        grade_map.put("A", 10);
+        grade_map.put("A-", 9);
+        grade_map.put("B", 8);
+        grade_map.put("B-", 7);
+        grade_map.put("C", 6);
+        grade_map.put("C-", 5);
+        grade_map.put("D", 4);
+        grade_map.put("E", 2);
+        grade_map.put("F", 0);
+
+        query = String.format(
+                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and grade!='W' ;",
+                entry_no);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        String course_code = "", grade = "", status = "", type = "";
+        float total_credits = 0, credits = 0;
+        float total_points = 0;
+
+        while (rs.next()) {
+            course_code = rs.getString("course_code");
+            grade = rs.getString("grade");
+            status = rs.getString("status");
+            type = rs.getString("type");
+            credits = Float.parseFloat(rs.getString("credits"));
+
+            total_credits = total_credits + credits;
+            total_points = total_points + credits * (grade_map.get(grade));
+        }
+        float cgpa = total_points / total_credits;
+
+        System.out.println(String.format(
+                " \n ==================================================================================== \n "));
+        System.out
+                .println(String.format("                          YOUR CGPA IS %s                             ", cgpa));
+        System.out.println(
+                " \n ==================================================================================== \n ");
+
+        return cgpa;
 
     }
 

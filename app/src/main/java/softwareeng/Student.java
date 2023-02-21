@@ -16,7 +16,7 @@ public class Student {
             System.out.println("Select Operation : ");
             System.out.println("1. Register in a course");
             System.out.println("2. Deregister in a course");
-            System.out.println("3. View Grades");
+            System.out.println("3. View Enrollments and Grades");
             System.out.println("4. Compute CGPA");
             System.out.println("5. Track your Graduation");
             System.out.println("6. Update Profile");
@@ -87,6 +87,26 @@ public class Student {
             current_semester = Integer.parseInt(rs.getString("semester"));
         }
 
+        int prev_acad_year = 0;
+        int prev_semester = 0;
+
+        if (current_semester == 2) {
+            prev_acad_year = current_start_acad_year;
+            prev_semester = 1;
+        } else {
+            prev_acad_year = current_start_acad_year - 1;
+            prev_semester = 2;
+        }
+
+        int prev_prev_acad_year = 0, prev_prev_semester = 0;
+        if (prev_semester == 2) {
+            prev_prev_acad_year = prev_acad_year;
+            prev_prev_semester = 1;
+        } else {
+            prev_prev_acad_year = prev_acad_year - 1;
+            prev_prev_semester = 2;
+        }
+
         // Get All Student Info
 
         query = "Select email from logs;";
@@ -113,8 +133,38 @@ public class Student {
 
         view_offerings();
 
-        // Select Course for Enrollment
+        // Get Credit Limit
 
+        float credit_limit = 0;
+        credit_limit = (float) (1.25
+                * ((get_credits(prev_acad_year, prev_semester) + get_credits(prev_prev_acad_year, prev_prev_semester))
+                        / 2));
+
+        System.out.println(String.format(
+                "Previous two semesters credits : \n YEAR : %d SEM : %d Credits : %f \n YEAR : %d SEM : %d Credits : %f ",
+                prev_acad_year, prev_semester, get_credits(prev_acad_year, prev_semester), prev_prev_acad_year,
+                prev_prev_semester, get_credits(prev_prev_acad_year, prev_prev_semester)));
+
+        System.out.println("Credit Limit :" + credit_limit);
+
+        // Calculate current credits
+
+        float current_credits = 0;
+
+        query = String.format(
+                "select credits from enrollments,course_catalog where entry_no = '%s' and start_acad_year= %d and semester = %d and enrollments.course_code = course_catalog.course_code and status = 'RUNNING';",
+                entry_no, current_start_acad_year, current_semester);
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            current_credits += Float.parseFloat(rs.getString("credits"));
+        }
+
+        System.out.println("Current Credits :" + current_credits);
+
+        // Select Course for Enrollment
         System.out.println("Enter course code you want to register in: ");
         String course_code = "";
         Scanner sc = new Scanner(System.in);
@@ -130,24 +180,9 @@ public class Student {
             course_credit = Integer.parseInt(rs.getString("credits"));
         }
 
-        // Calculate current credits
-
-        float current_credits = 0;
-
-        query = String.format(
-                "select credits from enrollments,course_catalog where entry_no = '2020csb1317' and start_acad_year= 2022 and semester = 2 and enrollments.course_code = course_catalog.course_code;",
-                entry_no);
-
-        st = con.createStatement();
-        rs = st.executeQuery(query);
-
-        while (rs.next()) {
-            current_credits += Float.parseFloat(rs.getString("credits"));
-        }
-
         // Check Eligibility
 
-        if (current_credits + course_credit > 24) {
+        if (current_credits + course_credit > credit_limit) {
             System.out.println("Credit Limit Exceeding ! Course Registration Failed");
         } else {
 
@@ -741,6 +776,77 @@ public class Student {
         }
         System.out.println(fmt);
 
+    }
+
+    public static float get_credits(int acad_year, int semester) throws Exception {
+
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        Connection con = DriverManager.getConnection(url, username, password);
+
+        String email = "";
+        String query = "";
+        String entry_no = "";
+        String department = "";
+        int batch = 0;
+
+        Statement st;
+        ResultSet rs;
+        int x;
+
+        query = "Select email from logs;";
+
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            email = rs.getString("email");
+        }
+
+        query = "Select * from auth where email= '" + email + "';";
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        while (rs.next()) {
+            entry_no = rs.getString("entry_no");
+            department = rs.getString("department");
+            batch = Integer.parseInt(rs.getString("batch"));
+        }
+
+        HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
+        grade_map.put("A", 10);
+        grade_map.put("A-", 9);
+        grade_map.put("B", 8);
+        grade_map.put("B-", 7);
+        grade_map.put("C", 6);
+        grade_map.put("C-", 5);
+        grade_map.put("D", 4);
+        grade_map.put("E", 2);
+        grade_map.put("F", 0);
+
+        query = String.format(
+                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where enrollments.start_acad_year =%d and enrollments.semester=%d and course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='DROPPED' and status!='INSTRUCTOR WITHDREW' ;",
+                acad_year, semester, entry_no);
+        st = con.createStatement();
+        rs = st.executeQuery(query);
+
+        String course_code = "", grade = "", status = "", type = "";
+        float total_credits = 0, credits = 0;
+
+        while (rs.next()) {
+            course_code = rs.getString("course_code");
+            grade = rs.getString("grade");
+            status = rs.getString("status");
+            type = rs.getString("type");
+            credits = Float.parseFloat(rs.getString("credits"));
+
+            total_credits = total_credits + credits;
+        }
+        return total_credits;
     }
 
 }
