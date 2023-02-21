@@ -19,7 +19,10 @@ public class AcadOffice {
             System.out.println("1. Edit Course Catalog");
             System.out.println("2. View Grade of All Students");
             System.out.println("3. Generate Transcript");
-            System.out.println("4. Logout");
+            System.out.println("4. Update Profile");
+            System.out.println("5. View Logs");
+            System.out.println("6. Update Event Calendar");
+            System.out.println("7. Logout");
 
             int option = 0;
 
@@ -34,8 +37,16 @@ public class AcadOffice {
             } else if (option == 3) {
                 transcript(con);
             } else if (option == 4) {
+                update_profile(con);
+            } else if (option == 5) {
+                view_logs(con);
+            } else if (option == 6) {
+                update_calendar(con);
+            } else if (option == 7) {
                 return;
-            } else {
+            }
+
+            else {
                 System.out.println("Select a valid option \n");
             }
 
@@ -62,7 +73,7 @@ public class AcadOffice {
 
             if (option == 1) {
                 String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
-                Statement st = con.createStatement();
+                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ResultSet rs = st.executeQuery(query);
 
                 Formatter fmt = new Formatter();
@@ -115,7 +126,7 @@ public class AcadOffice {
                         "insert into course_catalog (course_code,L,T,P,credits,department) values ('%s', %f, %f , %f , %f , '%s');",
                         course_code, l, t, p, credits, department);
 
-                Statement st = con.createStatement();
+                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 int x = st.executeUpdate(query);
 
                 while (true) {
@@ -143,7 +154,7 @@ public class AcadOffice {
 
                 String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code and course_catalog.course_code='"
                         + course_code + "' ;";
-                Statement st = con.createStatement();
+                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 ResultSet rs = st.executeQuery(query);
 
                 Formatter fmt = new Formatter();
@@ -294,7 +305,7 @@ public class AcadOffice {
                 return;
             }
 
-            st = con.createStatement();
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = st.executeQuery(query);
 
             Formatter fmt = new Formatter();
@@ -329,7 +340,7 @@ public class AcadOffice {
         entry_no = sc.nextLine();
 
         query = "select * from auth where entry_no = '" + entry_no + "'";
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         if (rs.next()) {
@@ -356,7 +367,7 @@ public class AcadOffice {
         query = String.format(
                 "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED' ;",
                 entry_no);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String text = String.format("\n %20s | %20s | %20s| %20s | %20s\n", "COURSE CODE", "ACAD YEAR", "SEMESTER",
@@ -385,7 +396,7 @@ public class AcadOffice {
 
         query = "Select * from calendar ;";
 
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         while (rs.next()) {
@@ -434,7 +445,7 @@ public class AcadOffice {
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
                 entry_no);
-        st = con.createStatement();
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String course_code = "", grade = "", status = "", type = "";
@@ -455,6 +466,110 @@ public class AcadOffice {
 
         return cgpa;
 
+    }
+
+    public static void update_profile(Connection con) throws Exception {
+
+        while (true) {
+
+            String phone_number = "phone_number";
+            String name_field = "name";
+            String password_field = "password";
+
+            System.out.println(" \n Select field to update : ");
+            System.out.println("1. " + phone_number);
+            System.out.println("2. " + name_field);
+            System.out.println("3. " + password_field);
+            System.out.println("4. Go Back ");
+
+            int option = 0;
+            Scanner sc = new Scanner(System.in);
+            option = sc.nextInt();
+            sc.nextLine();
+
+            String email = "";
+            String query = "";
+            Statement st;
+            ResultSet rs;
+            int x;
+
+            query = "Select email from logs;";
+
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = st.executeQuery(query);
+
+            rs.last();
+            email = rs.getString("email");
+            
+
+            if (option == 1) {
+                System.out.println("Enter new " + phone_number);
+                String new_number = sc.nextLine();
+
+                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Phone Number updated successfully");
+                }
+
+            } else if (option == 2) {
+                System.out.println("Enter new " + name_field);
+                String new_name = sc.nextLine();
+
+                query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Name updated successfully");
+                }
+
+            } else if (option == 3) {
+                System.out.println("Enter new " + password_field);
+                String new_pass = sc.nextLine();
+
+                query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
+                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                x = st.executeUpdate(query);
+
+                if (x == 1) {
+                    System.out.println("Password updated successfully");
+                }
+
+            } else {
+                break;
+            }
+        }
+    }
+
+    public static void view_logs(Connection con) throws Exception {
+            
+            String query = "";
+            Statement st;
+            ResultSet rs;
+            int x;
+    
+            query = "Select * from logs;";
+    
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = st.executeQuery(query);
+    
+            String email = "", role = "";
+            
+            while (rs.next()) {
+                email = rs.getString("email");
+                role = rs.getString("role");
+            }
+    
+            System.out.println(" \n Logged in as : " + email);
+            System.out.println(" \n Role : " + role);
+
+    
+    }
+
+    public static void update_calendar(Connection con) throws Exception {
     }
 
 }
