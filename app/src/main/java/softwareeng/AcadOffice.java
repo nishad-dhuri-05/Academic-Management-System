@@ -306,7 +306,7 @@ public class AcadOffice {
             Statement st;
 
             if (option == 1) {
-                query = "select * from enrollments where status!='RUNNING'";
+                query = "select * from enrollments where status!='RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED'";
 
             } else if (option == 2) {
                 String course_code;
