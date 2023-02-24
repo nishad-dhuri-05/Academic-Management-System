@@ -27,15 +27,12 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_1_test() throws Exception {
+    public void catalog_test() throws Exception {
 
-        String input = "acad@iitrpr.ac.in\nacadpass\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-       
-        Auth.main(con);
+        String input = "";
+        ByteArrayInputStream in;
 
-        input = "\n1\n1\n" ;
+        input = "\n5098\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -44,7 +41,24 @@ public class AcadOfficeTest {
         System.setOut(ps);
 
         AcadOffice.catalog(con);
-        AcadOffice.catalog_1(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Operation"));
+
+    }
+
+    @Test
+    public void catalog_1_test() throws Exception {
+
+        String input = "\n1\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
 
         String output = out.toString();
         assertTrue(output.contains("COURSE CODE"));
@@ -54,37 +68,91 @@ public class AcadOfficeTest {
     @Test
     public void catalog_2_test() throws Exception {
 
-        String input = "acad@iitrpr.ac.in\nacadpass\n";
+        String input = "\n2\nTEST\n9\n9\n9\n9\nTEST\nNIL\nq\n5098\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-       
-        Auth.main(con);
-
-        input = "\n1\n2\n" ;
-        in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(out);
-        // System.setOut(ps);
+        System.setOut(ps);
 
         AcadOffice.catalog(con);
 
-        input = "TEST\n9\n9\n9\n9\nTEST\nNIL\nq\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        out = new ByteArrayOutputStream();
-        ps = new PrintStream(out);
-        System.setOut(ps);
-
-        AcadOffice.catalog_2(con);
-
         String output = out.toString();
-        assertTrue(output.contains("Successfully"));
+        assertTrue(output.contains("Course Added Successfully."));
 
     }
 
-    
+    @Test
+    public void catalog_3_test() throws Exception {
+
+        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n3\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course Updated Successfully."));
+
+    }
+
+    @Test
+    public void catalog_4_test() throws Exception {
+
+        String input = "\n4\nTEST\n1\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course Deleted Successfully"));
+
+    }
+
+    @Test
+    public void catalog_5_test() throws Exception {
+
+        String input = "\n5\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select Operation"));
+
+    }
+
+    @Test
+    public void catalog_6_test() throws Exception {
+
+        String input = "\n99\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select Operation"));
+
+    }
 
 }
