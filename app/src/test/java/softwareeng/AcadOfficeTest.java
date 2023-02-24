@@ -26,6 +26,8 @@ public class AcadOfficeTest {
         this.con = DriverManager.getConnection(url, username, password);
     }
 
+    
+
     @Test
     public void catalog_test() throws Exception {
 
@@ -86,7 +88,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_3_test() throws Exception {
 
-        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n3\n5098\n";
+        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n5098\n5098\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -98,6 +100,42 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("Course Updated Successfully."));
+
+    }
+
+    @Test
+    public void catalog_3_test_add() throws Exception {
+
+        String input = "3\nTEST\n9\n9\n9\n9\nTEST\n1\nCSTEST\n5098\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Pre-requisite added successfully"));
+
+    }
+
+    @Test
+    public void catalog_3_test_delete() throws Exception {
+
+        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n2\nCSTEST\n5098\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Pre-requisite deleted successfully"));
 
     }
 
@@ -191,9 +229,10 @@ public class AcadOfficeTest {
 
     }
 
+    @Test
     public void view_grade_test_2() throws Exception {
 
-        String input = "\n2\n5098\n";
+        String input = "\n2\nCS305\n5098\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -208,9 +247,10 @@ public class AcadOfficeTest {
 
     }
 
+    @Test
     public void view_grade_test_3() throws Exception {
 
-        String input = "\n3\n5098\n";
+        String input = "\n3\n2020csb1317\n5098\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -222,6 +262,132 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
+
+    }
+
+    @Test
+    public void transcript_test() throws Exception {
+
+        String input = "2020csb1317\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.transcript(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Transcript generated successfully."));
+
+    }
+
+    @Test
+    public void logs_test() throws Exception {
+
+        String input = "\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.view_logs(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("LOGGED IN TIME"));
+
+    }
+
+    @Test
+    public void calendar_test() throws Exception {
+
+        String input = "\n2022\n2\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.update_calendar(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Calendar updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test() throws Exception {
+
+        String input = "\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select field to update"));
+
+    }
+
+    @Test
+    public void update_profile_test_1() throws Exception {
+
+        String input = "\n1\n7008257139\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Phone Number updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test_2() throws Exception {
+
+        String input = "\n2\nStaff\sDean\soffice\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Name updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test_3() throws Exception {
+
+        String input = "\n3\nacadpass\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Password updated successfully"));
 
     }
 

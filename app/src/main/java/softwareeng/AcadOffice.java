@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 public class AcadOffice {
 
+
     public static void main(Connection con) throws Exception {
 
+        Scanner sc = new Scanner(System.in);
         String query = "";
         Statement st;
         ResultSet rs;
@@ -44,30 +46,38 @@ public class AcadOffice {
 
             int option = 0;
 
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
             if (option == 1) {
+                System.out.println("================= COURSE CATALOG =================");
                 catalog(con);
             } else if (option == 2) {
+                System.out.println("================= VIEW GRADES =================");
                 view_grades(con);
             } else if (option == 3) {
+                System.out.println("================= GENERATE TRANSCRIPT =================");
                 transcript(con);
             } else if (option == 4) {
+                System.out.println("================= UPDATE PROFILE =================");
                 update_profile(con);
             } else if (option == 5) {
+                System.out.println("================= VIEW LOGS =================");
                 view_logs(con);
             } else if (option == 6) {
+                System.out.println("================= UPDATE CALENDAR =================");
                 update_calendar(con);
             } else if (option == 7) {
+                System.out.println("LOGGING OUT ... ");
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
-
+                
                 query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
-                        + role
-                        + "' and logged_in = '" + logged_in + "';";
+                + role
+                + "' and logged_in = '" + logged_in + "';";
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
+                
+                System.out.println("LOGGED OUT SUCCESSFULLY ");
                 return;
             } else if (option == 5098) {
                 break;
@@ -224,7 +234,7 @@ public class AcadOffice {
                         + ", department='" + department
                         + "' where course_code='" + course_code + "';";
 
-                System.out.println(query);
+                // System.out.println(query);
 
                 Statement st1 = con.createStatement();
                 int x = st1.executeUpdate(query);
@@ -248,6 +258,11 @@ public class AcadOffice {
                                 + course_code + "','" + pre_req + "');";
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
+
+                        if (x == 1) {
+                            System.out.println("Pre-requisite added successfully \n");
+                        } 
+
                     } else if (option_pre == 2) {
                         System.out.println("\nEnter pre-requisite to be deleted ");
                         pre_req = sc.nextLine();
@@ -256,7 +271,13 @@ public class AcadOffice {
                                 + pre_req + "';";
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
-                    } else {
+
+                        if (x == 1) {
+                            System.out.println("Pre-requisite deleted successfully \n");
+                        }
+
+                    } 
+                    else{
                         break;
                     }
 
@@ -322,7 +343,6 @@ public class AcadOffice {
                 String course_code;
 
                 System.out.println("Enter Course Code  \n");
-                sc = new Scanner(System.in);
                 course_code = sc.nextLine();
 
                 query = "select * from enrollments where course_code = '" + course_code + "'";
@@ -331,12 +351,11 @@ public class AcadOffice {
                 String entry_no;
 
                 System.out.println("Enter student entry no.  \n");
-                sc = new Scanner(System.in);
                 entry_no = sc.nextLine();
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
 
-            }else if(option==5098){
+            } else if (option == 5098) {
                 break;
             } else {
                 return;
@@ -358,7 +377,9 @@ public class AcadOffice {
             }
 
             System.out.println(fmt);
+
         }
+        sc.close();
 
     }
 
@@ -506,6 +527,8 @@ public class AcadOffice {
     }
 
     public static void update_profile(Connection con) throws Exception {
+        
+        Scanner sc = new Scanner(System.in);
 
         while (true) {
 
@@ -520,7 +543,6 @@ public class AcadOffice {
             System.out.println("4. Go Back ");
 
             int option = 0;
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
@@ -574,8 +596,10 @@ public class AcadOffice {
                     System.out.println("Password updated successfully");
                 }
 
-            } else {
+            }else if(option==5098){
                 break;
+            } else {
+                System.out.println("Invalid option");
             }
         }
     }
@@ -614,6 +638,7 @@ public class AcadOffice {
         String query = "";
         Statement st;
         ResultSet rs;
+        Scanner sc = new Scanner(System.in);
 
         query = "select * from calendar;";
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -640,14 +665,15 @@ public class AcadOffice {
         System.out.println(fmt);
 
         System.out.println("Enter new start academic year");
-        Scanner sc = new Scanner(System.in);
-        String new_start_acad_year = sc.nextLine();
+        int new_start_acad_year = sc.nextInt();
+        sc.nextLine();
 
         System.out.println("Enter new semester");
-        String new_semester = sc.nextLine();
+        int new_semester = sc.nextInt();
+        sc.nextLine();
 
         query = String.format(
-                "update calendar set status='COMPLETED' where status='RUNNING' ; insert into calendar values ('%s','%s','RUNNING'); ",
+                "update calendar set status='COMPLETED' where status='RUNNING' ; insert into calendar values (%d,%d,'RUNNING'); ",
                 new_start_acad_year, new_semester);
 
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
