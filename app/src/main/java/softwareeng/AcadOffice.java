@@ -299,6 +299,7 @@ public class AcadOffice {
 
     public static void view_grades(Connection con) throws Exception {
 
+        Scanner sc = new Scanner(System.in);
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -308,7 +309,6 @@ public class AcadOffice {
             System.out.println("4. Go Back");
 
             int option = 0;
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
@@ -336,6 +336,8 @@ public class AcadOffice {
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
 
+            }else if(option==5098){
+                break;
             } else {
                 return;
             }

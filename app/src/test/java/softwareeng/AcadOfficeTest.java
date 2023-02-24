@@ -155,4 +155,74 @@ public class AcadOfficeTest {
 
     }
 
+    @Test
+    public void view_grade_test() throws Exception {
+
+        String input = "\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("grades"));
+
+    }
+
+    @Test
+    public void view_grade_test_1() throws Exception {
+
+        String input = "\n1\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADE"));
+
+    }
+
+    public void view_grade_test_2() throws Exception {
+
+        String input = "\n2\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADE"));
+
+    }
+
+    public void view_grade_test_3() throws Exception {
+
+        String input = "\n3\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        AcadOffice.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADE"));
+
+    }
+
 }
