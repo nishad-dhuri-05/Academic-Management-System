@@ -27,47 +27,51 @@ public class AcadOfficeTest {
         this.con = DriverManager.getConnection(url, username, password);
     }
 
-    // @Test
-    // public void main_test_1() throws Exception {
+    @Test
+    public void main_test_1() throws Exception {
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     input = "1\n1\n5098\n5098\n5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        input = "1\n1\n5098\n5098\n5098\n5098\n\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     AcadOffice.main(con);
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("COURSE CATALOG"));
+        String output = out.toString();
+        assertTrue(output.contains("COURSE CATALOG"));
 
-    // }
+    }
 
-    // @Test
-    // public void main_test_2() throws Exception {
+    @Test
+    public void main_test_2() throws Exception {
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     input = "2\n5098\n5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        input = "2\n5098\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     AcadOffice.main(con);
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("VIEW GRADES"));
+        String output = out.toString();
+        assertTrue(output.contains("VIEW GRADES"));
 
-    // }
+    }
 
     @Test
     public void main_test_3() throws Exception {
@@ -92,90 +96,75 @@ public class AcadOfficeTest {
 
     }
 
-    // @Test
-    // public void main_test_4() throws Exception {
+    @Test
+    public void main_test_4() throws Exception {
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     input = "4\n5098\n5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        input = "4\n5098\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     AcadOffice.main(con);
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("UPDATE PROFILE"));
+        AcadOffice.main(con);
 
-    // }
-    // @Test
-    // public void main_test_5() throws Exception {
+        String output = out.toString();
+        assertTrue(output.contains("UPDATE PROFILE"));
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+    }
+    @Test
+    public void main_test_5() throws Exception {
 
-    //     input = "5\n5098\n5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        input = "5\n5098\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     AcadOffice.main(con);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("VIEW LOGS"));
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
 
-    // }
+        String output = out.toString();
+        assertTrue(output.contains("VIEW LOGS"));
 
-    // @Test
-    // public void main_test_6() throws Exception {
+    }
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+    @Test
+    public void main_test_6() throws Exception {
 
-    //     input = "6\n2022\n2\n5098\n5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        input = "6\n2022\n2\n5098\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     AcadOffice.main(con);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("UPDATE CALENDAR"));
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
 
-    // }
+        String output = out.toString();
+        assertTrue(output.contains("UPDATE CALENDAR"));
 
-    // @Test
-    // public void main_test_5098() throws Exception {
+    }
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
-
-    //     input = "5098\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
-
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
-
-    //     Scanner sc = new Scanner(System.in);
-    //     AcadOffice.sc = sc;
-    //     AcadOffice.main(con);
-
-    //     String output = out.toString();
-    //     assertTrue(output.contains("Logout"));
-
-    // }
 
     @Test
     public void main_test_7() throws Exception {
@@ -197,6 +186,28 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("LOGGED OUT SUCCESSFULLY"));
+
+    }
+    @Test
+    public void main_test_99() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "99\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select a valid option"));
 
     }
 
