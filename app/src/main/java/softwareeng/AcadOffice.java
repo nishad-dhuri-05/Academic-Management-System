@@ -9,10 +9,10 @@ import java.util.Scanner;
 
 public class AcadOffice {
 
-
+    static Scanner sc = new Scanner(System.in);
     public static void main(Connection con) throws Exception {
 
-        Scanner sc = new Scanner(System.in);
+        //  
         String query = "";
         Statement st;
         ResultSet rs;
@@ -31,6 +31,7 @@ public class AcadOffice {
             logged_in = rs.getString("logged_in");
         }
 
+        // sc = new Scanner(System.in);
         while (true) {
 
             System.out.println("\n==================================================");
@@ -47,6 +48,7 @@ public class AcadOffice {
             int option = 0;
 
             option = sc.nextInt();
+            System.out.println(option);
             sc.nextLine();
 
             if (option == 1) {
@@ -67,6 +69,7 @@ public class AcadOffice {
             } else if (option == 6) {
                 System.out.println("================= UPDATE CALENDAR =================");
                 update_calendar(con);
+                return;
             } else if (option == 7) {
                 System.out.println("LOGGING OUT ... ");
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
@@ -88,10 +91,12 @@ public class AcadOffice {
             System.out.println("\n**************************************************");
         }
 
+          
+
     }
 
     public static void catalog(Connection con) throws Exception {
-        Scanner sc = new Scanner(System.in);
+         
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -137,7 +142,6 @@ public class AcadOffice {
                 float credits;
 
                 System.out.println("\nEnter Course Code \n");
-                // Scanner sc1 = new Scanner(System.in);
                 course_code = sc.nextLine();
 
                 System.out.println("\nEnter Lecture hours \n");
@@ -314,13 +318,13 @@ public class AcadOffice {
             }
         }
 
-        sc.close();
+          
 
     }
 
     public static void view_grades(Connection con) throws Exception {
 
-        Scanner sc = new Scanner(System.in);
+         
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -379,7 +383,7 @@ public class AcadOffice {
             System.out.println(fmt);
 
         }
-        sc.close();
+          
 
     }
 
@@ -394,7 +398,7 @@ public class AcadOffice {
         ResultSet rs;
 
         System.out.println("Enter student entry no.  \n");
-        Scanner sc = new Scanner(System.in);
+         
         entry_no = sc.nextLine();
 
         query = "select * from auth where entry_no = '" + entry_no + "'";
@@ -528,7 +532,7 @@ public class AcadOffice {
 
     public static void update_profile(Connection con) throws Exception {
         
-        Scanner sc = new Scanner(System.in);
+         
 
         while (true) {
 
@@ -638,7 +642,7 @@ public class AcadOffice {
         String query = "";
         Statement st;
         ResultSet rs;
-        Scanner sc = new Scanner(System.in);
+         
 
         query = "select * from calendar;";
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

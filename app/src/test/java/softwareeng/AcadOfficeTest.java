@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class AcadOfficeTest {
 
@@ -26,15 +27,55 @@ public class AcadOfficeTest {
         this.con = DriverManager.getConnection(url, username, password);
     }
 
-    
+    // @Test
+    // public void main_test_1() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "1\n1\n5098\n5098\n5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("COURSE CATALOG"));
+
+    // }
+
+    // @Test
+    // public void main_test_2() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "2\n5098\n5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("VIEW GRADES"));
+
+    // }
 
     @Test
-    public void catalog_test() throws Exception {
+    public void main_test_3() throws Exception {
 
         String input = "";
         ByteArrayInputStream in;
 
-        input = "\n5098\n\n";
+        input = "3\n2020csb1317\n5098\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -42,6 +83,139 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GENERATE TRANSCRIPT"));
+
+    }
+
+    // @Test
+    // public void main_test_4() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "4\n5098\n5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("UPDATE PROFILE"));
+
+    // }
+    // @Test
+    // public void main_test_5() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "5\n5098\n5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("VIEW LOGS"));
+
+    // }
+
+    // @Test
+    // public void main_test_6() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "6\n2022\n2\n5098\n5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("UPDATE CALENDAR"));
+
+    // }
+
+    // @Test
+    // public void main_test_5098() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "5098\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     Scanner sc = new Scanner(System.in);
+    //     AcadOffice.sc = sc;
+    //     AcadOffice.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("Logout"));
+
+    // }
+
+    @Test
+    public void main_test_7() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "7\n5098\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("LOGGED OUT SUCCESSFULLY"));
+
+    }
+
+    @Test
+    public void catalog_test() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "1\n5098\n\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -60,6 +234,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -78,6 +254,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -96,6 +274,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -114,6 +294,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -132,6 +314,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -150,6 +334,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -168,6 +354,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -186,6 +374,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.catalog(con);
 
         String output = out.toString();
@@ -204,6 +394,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.view_grades(con);
 
         String output = out.toString();
@@ -222,6 +414,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.view_grades(con);
 
         String output = out.toString();
@@ -240,6 +434,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.view_grades(con);
 
         String output = out.toString();
@@ -258,6 +454,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.view_grades(con);
 
         String output = out.toString();
@@ -276,6 +474,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.transcript(con);
 
         String output = out.toString();
@@ -294,6 +494,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.view_logs(con);
 
         String output = out.toString();
@@ -312,6 +514,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.update_calendar(con);
 
         String output = out.toString();
@@ -330,6 +534,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.update_profile(con);
 
         String output = out.toString();
@@ -347,6 +553,9 @@ public class AcadOfficeTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
 
         AcadOffice.update_profile(con);
 
@@ -366,6 +575,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.update_profile(con);
 
         String output = out.toString();
@@ -384,6 +595,8 @@ public class AcadOfficeTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
         AcadOffice.update_profile(con);
 
         String output = out.toString();
