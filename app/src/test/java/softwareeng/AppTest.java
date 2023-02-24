@@ -6,9 +6,25 @@ package softwareeng;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ResourceBundle;
+
 public class AppTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
-        // assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+
+    static Connection con ;
+
+    public AppTest() throws Exception {
+        ResourceBundle rd = ResourceBundle.getBundle("config");
+        String url = rd.getString("url"); // localhost:5432
+        String username = rd.getString("username");
+        String password = rd.getString("password");
+
+        Class.forName("org.postgresql.Driver");
+        this.con = DriverManager.getConnection(url, username, password);
     }
+    
 }

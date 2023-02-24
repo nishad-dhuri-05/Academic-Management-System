@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.ResourceBundle;
 
 public class App {
+
+
     public static void main(String[] args) throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
@@ -17,7 +19,10 @@ public class App {
         Class.forName("org.postgresql.Driver");
         Connection con = DriverManager.getConnection(url, username, password);
 
+        System.out.println(
+                "========================================================= WELCOME =========================================================");
         while (true) {
+
             String role = "";
             role = Auth.main(con);
 
@@ -31,5 +36,6 @@ public class App {
                 System.out.println("Logged out");
             }
         }
+
     }
 }

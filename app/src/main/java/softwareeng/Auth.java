@@ -8,6 +8,14 @@ import java.util.Scanner;
 public class Auth {
     public static String main(Connection con) throws Exception {
 
+        // ResourceBundle rd = ResourceBundle.getBundle("config");
+        // String url = rd.getString("url"); // localhost:5432
+        // String username = rd.getString("username");
+        // String password = rd.getString("password");
+
+        // Class.forName("org.postgresql.Driver");
+        // Connection con = DriverManager.getConnection(url, username, password);
+
         String role = "";
         String email = "";
         String email_pass = "";
@@ -31,7 +39,7 @@ public class Auth {
         if (user_pass.equals(email_pass)) {
 
             Timestamp logged_in = new Timestamp(System.currentTimeMillis());
-            
+
             System.out.println("LOGGED IN TIME : " + logged_in);
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
