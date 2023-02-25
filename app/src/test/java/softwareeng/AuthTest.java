@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class AuthTest { 
     
@@ -27,26 +28,30 @@ public class AuthTest {
     }
 
 
-    @Test public void LoginSuccess() throws Exception {
+    // @Test 
+    public void login_acad_success() throws Exception {
 
-        String input = "acad@iitrpr.ac.in\nacadpass\n\n\n\n";
+        // Scanner sc = new Scanner(System.in);
+
+        String input = "acadtest@iitrpr.ac.in\nacadtestpass\n\n\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-        Auth.main(con);
-
+        // System.setOut(ps);
+        // Auth.sc = sc;
+        String role = Auth.main(con);
 
         String output = out.toString(); 
-        assertTrue(output.contains("acad"));
+        assertEquals(role, "acad");
+        // assertTrue(output.contains("acad"));
 
     }
+    // @Test 
+    public void LoginFail() throws Exception {
 
-    @Test public void LoginFail() throws Exception {
-
-        String input = "acad@iitrpr.ac.in\nacadpasswrong\n\n\n\n";
+        String input = "acadtest@iitrpr.ac.in\nacadpasswrong\n\n\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

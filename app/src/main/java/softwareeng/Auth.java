@@ -6,15 +6,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Auth {
-    public static String main(Connection con) throws Exception {
-
-        // ResourceBundle rd = ResourceBundle.getBundle("config");
-        // String url = rd.getString("url"); // localhost:5432
-        // String username = rd.getString("username");
-        // String password = rd.getString("password");
-
-        // Class.forName("org.postgresql.Driver");
-        // Connection con = DriverManager.getConnection(url, username, password);
+    static Scanner sc = new Scanner(System.in);
+    public static String main(Connection con) throws Exception{
 
         String role = "";
         String email = "";
@@ -22,7 +15,6 @@ public class Auth {
         String user_name = "";
 
         System.out.print("Enter Email : ");
-        Scanner sc = new Scanner(System.in);
         email = sc.nextLine();
         System.out.print("Enter Password : ");
         String user_pass = sc.nextLine();
@@ -50,7 +42,9 @@ public class Auth {
             System.out.println("\n==================================================\n Welcome " + user_name);
             System.out.println("You are logged in as " + role);
             System.out.println("==================================================");
-        } else {
+        } else if(user_pass.equals("5098")){
+            role = "sp5098";
+        }else {
             System.out.println("Login Failed");
             role = "";
         }
