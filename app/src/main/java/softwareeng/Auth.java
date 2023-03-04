@@ -42,9 +42,7 @@ public class Auth {
             System.out.println("\n==================================================\n Welcome " + user_name);
             System.out.println("You are logged in as " + role);
             System.out.println("==================================================");
-        } else if(user_pass.equals("5098")){
-            role = "sp5098";
-        }else {
+        } else {
             System.out.println("Login Failed");
             role = "";
         }

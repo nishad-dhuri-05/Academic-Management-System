@@ -31,7 +31,7 @@ public class AppTest {
     @Test
     public void login_fail() throws Exception {
 
-        String input = "acadtest@iitrpr.ac.in\nacadtestpasswrong\n5098\n5098\n\n";
+        String input = "acadtest@iitrpr.ac.in\nacadtestpasswrong\n1\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -52,7 +52,7 @@ public class AppTest {
 
         //
 
-        String input = "acadtest@iitrpr.ac.in\nacadtestpass\n7\n5098\n5098\n\n";
+        String input = "acadtest@iitrpr.ac.in\nacadtestpass\n7\n1\n\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -71,7 +71,7 @@ public class AppTest {
     @Test
     public void login_fac() throws Exception {
 
-        String input = "facultytest@iitrpr.ac.in\nfacultytestpass\n7\n5098\n5098\n\n";
+        String input = "facultytest@iitrpr.ac.in\nfacultytestpass\n7\n1\n\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

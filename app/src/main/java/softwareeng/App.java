@@ -37,11 +37,20 @@ public class App {
                 Faculty.main(con);
             } else if (role.equals("student")) {
                 Student.main(con);
-            } else if (role.equals("sp5098")) {
-                break;
             } else {
                 System.out.println("Logged out");
             }
+
+            System.out.println("Do you want to exit the application ? (Press 1 to exit, 0 to continue)");
+            int option = 0;
+            option = sc.nextInt();
+            sc.nextLine();
+
+            if(option==1){
+                break;
+            }
+
+
         }
 
         System.out.println("Thank you for using our application");

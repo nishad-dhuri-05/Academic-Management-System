@@ -52,7 +52,7 @@ public class AcadOfficeTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\n1\n5098\n5098\n5098\n5098\n\n";
+        input = "1\n1\n7\n5098\n5098\n5098\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

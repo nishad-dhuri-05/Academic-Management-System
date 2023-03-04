@@ -16,10 +16,10 @@ public class Faculty {
         Statement st;
         ResultSet rs;
         int x;
-
+        
+        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         query = "Select * from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         rs = st.executeQuery(query);
 
         String email = "", role = "", logged_in = "";
@@ -75,8 +75,6 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
                 return;
-            } else if (option == 5098) {
-                break;
             } else {
                 System.out.println("Select a valid option \n");
             }

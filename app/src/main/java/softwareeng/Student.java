@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Student {
+    
+    static Scanner sc = new Scanner(System.in);
+    
+
     public static void main(Connection con) throws Exception {
 
         String query = "";
@@ -41,19 +45,23 @@ public class Student {
 
             int option = 0;
 
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
             if (option == 1) {
+                System.out.println("================= COURSE REGISTRATION =================");
                 coursereg(con);
             } else if (option == 2) {
+                System.out.println("================= COURSE DE-REGISTRATION =================");
                 coursedereg(con);
             } else if (option == 3) {
+                System.out.println("================= VIEW GRADES =================");
                 view_grades(con);
             } else if (option == 4) {
+                System.out.println("================= VIEW CGPA =================");
                 float x = get_cgpa(con);
             } else if (option == 5) {
+                System.out.println("================= TRACK GRADUATION =================");
                 track_grad(con);
             } else if (option == 6) {
                 update_profile(con);
@@ -183,7 +191,6 @@ public class Student {
         // Select Course for Enrollment
         System.out.println("Enter course code you want to register in: ");
         String course_code = "";
-        Scanner sc = new Scanner(System.in);
         course_code = sc.nextLine();
 
         float course_credit = 0;
@@ -339,7 +346,6 @@ public class Student {
 
         System.out.println("Enter course code you want to de-register from: ");
         String course_code = "";
-        Scanner sc = new Scanner(System.in);
         course_code = sc.nextLine();
 
         query = String.format(
@@ -354,7 +360,7 @@ public class Student {
         } else {
 
             query = String.format(
-                    "update enrollments set status = 'DROPPED' where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
+                    "delete from enrollments where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                     entry_no, course_code, current_start_acad_year, current_semester);
 
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -618,7 +624,6 @@ public class Student {
             System.out.println("4. Go Back ");
 
             int option = 0;
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
