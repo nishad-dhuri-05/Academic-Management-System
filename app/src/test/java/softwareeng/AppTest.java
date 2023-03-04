@@ -39,7 +39,8 @@ public class AppTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
-        App.main();
+        String[] args = {"arg1"};
+        App.main(args);
 
         String output = out.toString();
         assertTrue(output.contains("Thank you for using our application"));
@@ -59,7 +60,9 @@ public class AppTest {
         PrintStream ps = new PrintStream(out);
         System.setOut(ps);
 
-        App.main();
+        String[] args = { "arg1" };
+        App.main(args);
+        // App.main(args);
 
         String output = out.toString();
         assertTrue(output.contains("Thank you for using our application"));

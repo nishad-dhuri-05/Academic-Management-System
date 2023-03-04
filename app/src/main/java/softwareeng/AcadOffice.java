@@ -31,7 +31,6 @@ public class AcadOffice {
             logged_in = rs.getString("logged_in");
         }
 
-        // sc = new Scanner(System.in);
         while (true) {
 
             System.out.println("\n==================================================");

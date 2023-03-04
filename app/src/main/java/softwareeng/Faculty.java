@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Faculty {
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(Connection con) throws Exception {
 
         String query = "";
@@ -27,7 +29,8 @@ public class Faculty {
             role = rs.getString("role");
             logged_in = rs.getString("logged_in");
         }
-        
+
+        int option = 0;
         while (true) {
 
             System.out.println("\n==================================================");
@@ -41,21 +44,25 @@ public class Faculty {
             System.out.println("6. Update Profile");
             System.out.println("7. Logout");
 
-            int option = 0;
-
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
+            System.out.println(option);
+
             if (option == 1) {
+                System.out.println("================= COURSE OFFERING REGISTRATION =================");
                 register_course_offering(con);
             } else if (option == 2) {
+                System.out.println("================= COURSE OFFERING DE-REGISTRATION =================");
                 deregister_course_offering(con);
             } else if (option == 3) {
+                System.out.println("================= COURSE CATALOG =================");
                 view_catalog(con);
             } else if (option == 4) {
+                System.out.println("================= UPLOAD GRADES =================");
                 upload_grades(con);
             } else if (option == 5) {
+
                 view_grades(con);
             } else if (option == 6) {
                 update_profile(con);
@@ -68,6 +75,8 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
                 return;
+            } else if (option == 5098) {
+                break;
             } else {
                 System.out.println("Select a valid option \n");
             }
@@ -78,7 +87,7 @@ public class Faculty {
     }
 
     public static void register_course_offering(Connection con) throws Exception {
-       
+
         String query = "";
         Statement st;
         ResultSet rs;
@@ -121,7 +130,6 @@ public class Faculty {
         }
 
         System.out.println("Enter the course code you want to offer");
-        Scanner sc = new Scanner(System.in);
         String course_code = sc.nextLine();
 
         query = "Select department from course_catalog where course_code='" + course_code + "';";
@@ -154,7 +162,8 @@ public class Faculty {
 
                 System.out.println("\n NEW RESTRICTION \n");
 
-                System.out.println("Enter offered Department ('CSE' , 'MA' , 'EE' , 'ME' , 'CE' , 'CH' , 'MME' , 'HS' , 'PH' , 'BME') ");
+                System.out.println(
+                        "Enter offered Department ('CSE' , 'MA' , 'EE' , 'ME' , 'CE' , 'CH' , 'MME' , 'HS' , 'PH' , 'BME') ");
                 offered_dept = sc.nextLine();
 
                 System.out.println("Enter corresponding offered department's batch");
@@ -228,9 +237,9 @@ public class Faculty {
 
         // Department Check
 
-        Scanner sc = new Scanner(System.in);
         System.out.println("Enter the course code you want to deregister");
         String course_code = sc.nextLine();
+        System.out.println(course_code);
 
         query = String.format(
                 "select * from course_offering where course_code = '%s' and start_acad_year = %d and semester = %d and instructor_email = '%s';",
@@ -244,8 +253,9 @@ public class Faculty {
         } else {
 
             query = String.format(
-                    "Delete from course_offering where course_code='%s' and start_acad_year=%d and semester=%d and instructor_email='%s';",
-                    course_code, current_start_acad_year, current_semester, email);
+                    "Delete from course_offering where course_code='%s' and start_acad_year=%d and semester=%d and instructor_email='%s';Delete from offered_to where course_code='%s' and start_acad_year=%d and semester=%d;",
+                    course_code, current_start_acad_year, current_semester, email, course_code, current_start_acad_year,
+                    current_semester);
 
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             int m = st.executeUpdate(query);
@@ -255,9 +265,9 @@ public class Faculty {
                     course_code, current_start_acad_year, current_semester);
 
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            int n = st.executeUpdate(query);
+            // int n = st.executeUpdate(query);
 
-            if (m == 1 && n == 1) {
+            if (m == 1) {
                 System.out.println("Course Offering De-Registered Successfully !");
             } else {
                 System.out.println("Course Offering De-Registration Failed !");
@@ -346,7 +356,6 @@ public class Faculty {
         String course_code = "";
         String filepath = "";
 
-        Scanner sc = new Scanner(System.in);
         System.out.println("Enter the course code for which you want to upload grades");
         course_code = sc.nextLine();
 
@@ -405,7 +414,7 @@ public class Faculty {
     }
 
     public static void view_grades(Connection con) throws Exception {
-    
+
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -415,7 +424,6 @@ public class Faculty {
             System.out.println("4. Go Back");
 
             int option = 0;
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
@@ -429,7 +437,6 @@ public class Faculty {
                 String course_code;
 
                 System.out.println("Enter Course Code  \n");
-                sc = new Scanner(System.in);
                 course_code = sc.nextLine();
 
                 query = "select * from enrollments where course_code = '" + course_code + "'";
@@ -438,7 +445,6 @@ public class Faculty {
                 String entry_no;
 
                 System.out.println("Enter student entry no.  \n");
-                sc = new Scanner(System.in);
                 entry_no = sc.nextLine();
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
@@ -486,7 +492,6 @@ public class Faculty {
             System.out.println("6. Go Back ");
 
             int option = 0;
-            Scanner sc = new Scanner(System.in);
             option = sc.nextInt();
             sc.nextLine();
 
@@ -572,5 +577,4 @@ public class Faculty {
 
     }
 
-    
 }

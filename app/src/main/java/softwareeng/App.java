@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class App {
 
-    public static void main() throws Exception {
+    public static void main(String[] args) throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
         String url = rd.getString("url"); // localhost:5432
