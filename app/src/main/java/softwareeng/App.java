@@ -33,6 +33,7 @@ public class App {
                 AcadOffice.sc = sc;
                 AcadOffice.main(con);
             } else if (role.equals("faculty")) {
+                Faculty.sc = sc;
                 Faculty.main(con);
             } else if (role.equals("student")) {
                 Student.main(con);

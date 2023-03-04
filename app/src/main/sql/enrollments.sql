@@ -23,6 +23,8 @@ insert into enrollments (entry_no,course_code,status,start_acad_year,semester)
 values ('2020csb1153', 'CS305', 'RUNNING' , 2022,2);
 insert into enrollments (entry_no,course_code,status,start_acad_year,semester)
 values ('2020csbtest', 'CSTEST', 'RUNNING' , 2022,2);
+insert into enrollments (entry_no,course_code,status,start_acad_year,semester)
+values ('2019csbtest', 'CSTEST', 'RUNNING' , 2022,2);
 
 
 insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)

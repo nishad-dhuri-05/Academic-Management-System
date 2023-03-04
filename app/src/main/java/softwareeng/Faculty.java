@@ -62,7 +62,7 @@ public class Faculty {
                 System.out.println("================= UPLOAD GRADES =================");
                 upload_grades(con);
             } else if (option == 5) {
-
+                System.out.println("================= VIEW GRADES =================");
                 view_grades(con);
             } else if (option == 6) {
                 update_profile(con);
@@ -269,8 +269,6 @@ public class Faculty {
 
             if (m == 1) {
                 System.out.println("Course Offering De-Registered Successfully !");
-            } else {
-                System.out.println("Course Offering De-Registration Failed !");
             }
 
         }
@@ -404,10 +402,7 @@ public class Faculty {
 
                 if (n == 1) {
                     System.out.println("Grades Uploaded Successfully !");
-                } else {
-                    System.out.println("Grades Upload Failed !");
                 }
-
             }
         }
 
@@ -449,6 +444,8 @@ public class Faculty {
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
 
+            } else if (option == 5098) {
+                break;
             } else {
                 return;
             }
@@ -513,7 +510,8 @@ public class Faculty {
                 System.out.println("Enter new " + phone_number_field);
                 String new_phone_number = sc.nextLine();
 
-                query = String.format("update auth set email = '%s' where email = '%s' ", new_phone_number, email);
+                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_phone_number,
+                        email);
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 

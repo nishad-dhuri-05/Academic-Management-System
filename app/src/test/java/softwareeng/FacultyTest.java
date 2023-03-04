@@ -73,8 +73,8 @@ public class FacultyTest {
 
         String input = "";
         ByteArrayInputStream in;
-        String path = "C:\\Users\\subha\\OneDrive\\Desktop\\Acads\\CS305\\software-eng\\CS305-miniproject\\app\\grades\\grades_CSTEST.csv";
-        input = String.format("4\nCSTEST\n%s\n5098\n\n\n",path);
+        String path1 = "C:\\Users\\subha\\OneDrive\\Desktop\\Acads\\CS305\\software-eng\\CS305-miniproject\\app\\grades\\grades_CSTEST.csv";
+        input = String.format("4\nCSTEST\n%s\n5098\n\n\n", path1);
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -88,6 +88,28 @@ public class FacultyTest {
 
         String output = out.toString();
         assertTrue(output.contains("Grades Uploaded Successfully !"));
+
+    }
+   
+    @Test
+    public void grade_upload_test_fail() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+        input = String.format("4\nCS305\n5098\n\n\n");
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("You are not the instructor for this course offering !"));
 
     }
 
@@ -113,6 +135,28 @@ public class FacultyTest {
         assertTrue(output.contains("Course Offering De-Registered Successfully !"));
 
     }
+    @Test
+    public void deregister_course_offering_test_fail() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "2\nCSXYZ\n5098\n\n\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course Offering De-Registration Failed"));
+
+    }
 
     @Test
     public void view_catalog_test() throws Exception {
@@ -134,6 +178,187 @@ public class FacultyTest {
 
         String output = out.toString();
         assertTrue(output.contains("COURSE CATALOG"));
+
+    }
+
+    @Test
+    public void view_grade_test_1() throws Exception {
+
+        String input = "5\n1\n4\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("VIEW GRADES"));
+
+    }
+
+    @Test
+    public void view_grade_test_2() throws Exception {
+
+        String input = "\n2\nCSTEST\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADE"));
+
+    }
+
+    @Test
+    public void view_grade_test_3() throws Exception {
+
+        String input = "\n3\n2020csbtest\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.view_grades(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADE"));
+
+    }
+    
+    @Test
+    public void update_profile_test_1() throws Exception {
+
+        String input = "6\n1\n7008257139\n6\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Phone number updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test_2() throws Exception {
+
+        String input = "\n2\nfaculty\stest\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Name updated successfully"));
+
+    }
+    @Test
+    public void update_profile_test_3() throws Exception {
+
+        String input = "\n3\nCSE\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Department updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test_4() throws Exception {
+
+        String input = "\n4\nfacultytestpass\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Password updated successfully"));
+
+    }
+    @Test
+    public void update_profile_test_5() throws Exception {
+
+        String input = "\n5\n2018-03-04\n5098\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.update_profile(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Joining date updated successfully"));
+
+    }
+
+    @Test
+    public void valid_option_test() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "89\n5098\n\n\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select a valid option"));
 
     }
 

@@ -68,7 +68,24 @@ public class AppTest {
         assertTrue(output.contains("Thank you for using our application"));
 
     }
+    @Test
+    public void login_fac() throws Exception {
 
-    
+        String input = "facultytest@iitrpr.ac.in\nfacultytestpass\n7\n5098\n5098\n\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        String[] args = { "arg1" };
+        App.main(args);
+        // App.main(args);
+
+        String output = out.toString();
+        assertTrue(output.contains("Thank you for using our application"));
+
+    }
+   
 }
