@@ -20,6 +20,8 @@ values ('faculty1@iitrpr.ac.in', 'faculty', 'faculty1','faculty1pass','CSE','123
 insert into auth(email,role,name,password,department,phone_number)
 values ('faculty2@iitrpr.ac.in', 'faculty', 'faculty2','faculty2pass','CSE','1234567890');
 insert into auth(email,role,name,password,department,phone_number)
+values ('faculty3@iitrpr.ac.in', 'faculty', 'faculty3','faculty3pass','HS','1234567890');
+insert into auth(email,role,name,password,department,phone_number)
 values ('facultytest@iitrpr.ac.in', 'faculty', 'facultytest','facultytestpass','CSE','1234567890');
 
 insert into auth(email,role,batch,name,password,department,entry_no,phone_number)

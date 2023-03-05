@@ -67,6 +67,118 @@ public class StudentTest {
     }
 
     @Test
+    public void deregister_course_test() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "2\nCS305\n2\nCS306\n2\nHS301\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course De-Registered Successfully"));
+
+    }
+
+    // @Test
+    // public void register_course_test_CSTEST() throws Exception {
+
+    //     String input = "";
+    //     ByteArrayInputStream in;
+
+    //     input = "1\nCSTEST\n7\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
+
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
+
+    //     Scanner sc = new Scanner(System.in);
+    //     Student.sc = sc;
+    //     Student.main(con);
+
+    //     String output = out.toString();
+    //     assertTrue(output.contains("Pre-requisite CSPRETEST not met"));
+
+    // }
+    @Test
+    public void register_course_test_CSCGTEST() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "1\nCSCGTEST\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("CGPA criteria not met"));
+
+    }
+    @Test
+    public void register_course_test_HS301() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "1\nHS301\n2\nHS301\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course Registered Successfully"));
+
+    }
+    @Test
+    public void register_course_test_HS202() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "1\nHS202\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Course not offered to your batch"));
+
+    }
+
+    @Test
     public void register_course_test_fail() throws Exception {
 
         String input = "";
@@ -88,28 +200,7 @@ public class StudentTest {
         assertTrue(output.contains("Course Registration Failed"));
 
     }
-    @Test
-    public void deregister_course_test() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "2\nCS305\n2\nCS306\n7\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Student.sc = sc;
-        Student.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Course De-Registered Successfully"));
-
-    }
+   
 
     @Test
     public void view_grade_test() throws Exception {

@@ -51,7 +51,7 @@ public class FacultyTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\nCSTEST\nCSE\n2020\n7.5\nPC\nNo\n7\n\n\n";
+        input = "1\nCSOFFTEST\nCSE\n2020\n7.5\nPC\nNo\n7\n\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -73,8 +73,8 @@ public class FacultyTest {
 
         String input = "";
         ByteArrayInputStream in;
-        String path1 = "C:\\Users\\subha\\OneDrive\\Desktop\\Acads\\CS305\\software-eng\\CS305-miniproject\\app\\grades\\grades_CSTEST.csv";
-        input = String.format("4\nCSTEST\n%s\n7\n7\n\n", path1);
+        String path1 = "C:\\Users\\subha\\OneDrive\\Desktop\\Acads\\CS305\\software-eng\\CS305-miniproject\\app\\grades\\grades_CSOFFTEST.csv";
+        input = String.format("4\nCSOFFTEST\n%s\n7\n7\n\n", path1);
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -119,7 +119,7 @@ public class FacultyTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "2\nCSTEST\n7\n\n\n";
+        input = "2\nCSOFFTEST\n7\n\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

@@ -123,7 +123,13 @@ where course_code = 'CSTEST'
 
 insert into enrollments (entry_no,course_code,status,start_acad_year,semester)
 values ('2020csbtest',
-        'CSTEST',
+        'CSOFFTEST',
+        'RUNNING',
+        2022,
+        2);
+insert into enrollments (entry_no,course_code,status,start_acad_year,semester)
+values ('2019csbtest',
+        'CSOFFTEST',
         'RUNNING',
         2022,
         2);

@@ -206,7 +206,8 @@ public class Student {
         // Check Eligibility
 
         if (current_credits + course_credit > credit_limit) {
-            System.out.println("Credit Limit Exceeding ! Course Registration Failed");
+            System.out.println("Credit Limit Exceeding ! ");
+            eligible = 0;
         } else {
 
             query = String.format(
@@ -218,7 +219,7 @@ public class Student {
             rs = st.executeQuery(query);
 
             if (!rs.isBeforeFirst()) {
-                System.out.println("Course not offered to your batch ! Course Registration Failed");
+                System.out.println("Course not offered to your batch ! ");
                 eligible = 0;
             }
 
@@ -226,9 +227,9 @@ public class Student {
 
                 // Check CGPA
 
-                int min_cgpa = 0;
+                float min_cgpa = 0;
                 while (rs.next()) {
-                    min_cgpa = Integer.parseInt(rs.getString("min_cgpa"));
+                    min_cgpa = Float.parseFloat(rs.getString("min_cgpa"));
                 }
 
                 if (student_cgpa >= min_cgpa) {
@@ -257,7 +258,7 @@ public class Student {
 
                         if (!rs2.isBeforeFirst()) {
                             flag = 1;
-                            System.out.println(String.format("Pre-requisite %s not met ! Course Registration Failed",
+                            System.out.println(String.format("Pre-requisite %s not met ! ",
                                     pre_req_course_code));
                             break;
                         }
@@ -270,28 +271,26 @@ public class Student {
                     }
 
                 } else {
-                    System.out.println("CGPA not met ! Course Registration Failed");
+                    System.out.println("CGPA criteria not met !");
                     eligible = 0;
                 }
             }
 
-            if (eligible == 1) {
+        }
+        if (eligible == 1) {
 
-                query = String.format(
-                        "insert into enrollments (entry_no,course_code,status,start_acad_year,semester) values ( '%s' , '%s' , 'RUNNING' , %d, %d);",
-                        entry_no, course_code, current_start_acad_year, current_semester);
+            query = String.format(
+                    "insert into enrollments (entry_no,course_code,status,start_acad_year,semester) values ( '%s' , '%s' , 'RUNNING' , %d, %d);",
+                    entry_no, course_code, current_start_acad_year, current_semester);
 
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Course Registered Successfully");
-                } else {
-                    System.out.println("Course Registration Failed");
-                }
-            } else {
-                System.out.println("Eligibility criteria not met ! Course Registration Failed");
+            if (x == 1) {
+                System.out.println("Course Registered Successfully");
             }
+        } else {
+            System.out.println("Course Registration Failed");
         }
     }
 
