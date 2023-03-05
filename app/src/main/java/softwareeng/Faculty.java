@@ -16,7 +16,7 @@ public class Faculty {
         Statement st;
         ResultSet rs;
         int x;
-        
+
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         query = "Select * from logs;";
 
@@ -442,8 +442,6 @@ public class Faculty {
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
 
-            } else if (option == 5098) {
-                break;
             } else {
                 return;
             }

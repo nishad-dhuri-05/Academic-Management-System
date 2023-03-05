@@ -81,9 +81,7 @@ public class AcadOffice {
                 
                 System.out.println("LOGGED OUT SUCCESSFULLY ");
                 return;
-            } else if (option == 5098) {
-                break;
-            } else {
+            }else {
                 System.out.println("Select a valid option \n");
             }
 
@@ -358,8 +356,6 @@ public class AcadOffice {
 
                 query = "select * from enrollments where entry_no = '" + entry_no + "'";
 
-            } else if (option == 5098) {
-                break;
             } else {
                 return;
             }
@@ -599,11 +595,9 @@ public class AcadOffice {
                     System.out.println("Password updated successfully");
                 }
 
-            }else if(option==5098){
-                break;
-            } else {
-                System.out.println("Invalid option");
-            }
+            }else{
+                return;
+            } 
         }
     }
 

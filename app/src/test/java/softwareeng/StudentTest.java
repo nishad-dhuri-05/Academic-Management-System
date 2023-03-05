@@ -49,7 +49,7 @@ public class StudentTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\nCS305\n7\n";
+        input = "1\nCS305\n1\nCS306\n7\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -67,7 +67,7 @@ public class StudentTest {
     }
 
     @Test
-    public void register_course_test_limit_check() throws Exception {
+    public void register_course_test_fail() throws Exception {
 
         String input = "";
         ByteArrayInputStream in;
@@ -94,7 +94,7 @@ public class StudentTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "2\nCS305\n7\n";
+        input = "2\nCS305\n2\nCS306\n7\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

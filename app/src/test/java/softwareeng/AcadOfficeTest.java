@@ -46,189 +46,29 @@ public class AcadOfficeTest {
         int m = st.executeUpdate(query);
     }
 
-    @Test
-    public void main_test_1() throws Exception {
+    // @Test
+    // public void main_test_7() throws Exception {
 
-        String input = "";
-        ByteArrayInputStream in;
+    //     String input = "";
+    //     ByteArrayInputStream in;
 
-        input = "1\n1\n7\n5098\n5098\n5098\n\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+    //     input = "7\n\n";
+    //     in = new ByteArrayInputStream(input.getBytes());
+    //     System.setIn(in);
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
+    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
+    //     PrintStream ps = new PrintStream(out);
+    //     System.setOut(ps);
 
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
+    //     Scanner sc = new Scanner(System.in);
+    //     AcadOffice.sc = sc;
+    //     AcadOffice.main(con);
 
-        String output = out.toString();
-        assertTrue(output.contains("COURSE CATALOG"));
+    //     String output = out.toString();
+    //     assertTrue(output.contains("LOGGED OUT SUCCESSFULLY"));
 
-    }
-
-    @Test
-    public void main_test_2() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "2\n5098\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("VIEW GRADES"));
-
-    }
-
-    @Test
-    public void main_test_3() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "3\n2020csb1317\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("GENERATE TRANSCRIPT"));
-
-    }
-
-    @Test
-    public void main_test_4() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "4\n5098\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("UPDATE PROFILE"));
-
-    }
-    @Test
-    public void main_test_5() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "5\n5098\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("VIEW LOGS"));
-
-    }
-
-    @Test
-    public void main_test_6() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "6\n2022\n2\n5098\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("UPDATE CALENDAR"));
-
-    }
-
-
-    @Test
-    public void main_test_7() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "7\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("LOGGED OUT SUCCESSFULLY"));
-
-    }
-    @Test
-    public void main_test_99() throws Exception {
-
-        String input = "";
-        ByteArrayInputStream in;
-
-        input = "99\n5098\n";
-        in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Select a valid option"));
-
-    }
+    // }
+ 
 
     @Test
     public void catalog_test() throws Exception {
@@ -236,7 +76,7 @@ public class AcadOfficeTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\n5098\n\n";
+        input = "1\n1\n5\n7\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -246,37 +86,18 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Operation"));
-
-    }
-
-    @Test
-    public void catalog_1_test() throws Exception {
-
-        String input = "\n1\n5098\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("COURSE CODE"));
 
     }
 
+   
     @Test
     public void catalog_2_test() throws Exception {
 
-        String input = "\n2\nTEST\n9\n9\n9\n9\nTEST\nNIL\nq\n5098\n";
+        String input = "\n2\nTEST\n9\n9\n9\n9\nTEST\nNIL\nq\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -296,7 +117,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_3_test() throws Exception {
 
-        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n5098\n5098\n";
+        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -316,7 +137,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_3_test_add() throws Exception {
 
-        String input = "3\nTEST\n9\n9\n9\n9\nTEST\n1\nCSTEST\n5098\n5098\n";
+        String input = "3\nTEST\n9\n9\n9\n9\nTEST\n1\nCSTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -336,7 +157,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_3_test_delete() throws Exception {
 
-        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n2\nCSTEST\n5098\n5098\n";
+        String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n2\nCSTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -356,7 +177,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_4_test() throws Exception {
 
-        String input = "\n4\nTEST\n1\n5098\n";
+        String input = "\n4\nTEST\n1\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -376,7 +197,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_5_test() throws Exception {
 
-        String input = "\n5\n5098\n";
+        String input = "\n5\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -396,7 +217,7 @@ public class AcadOfficeTest {
     @Test
     public void catalog_6_test() throws Exception {
 
-        String input = "\n99\n5098\n";
+        String input = "\n99\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -413,30 +234,11 @@ public class AcadOfficeTest {
 
     }
 
-    @Test
-    public void view_grade_test() throws Exception {
-
-        String input = "\n5098\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.view_grades(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("grades"));
-
-    }
 
     @Test
     public void view_grade_test_1() throws Exception {
 
-        String input = "\n1\n5098\n";
+        String input = "2\n1\n4\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -446,7 +248,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.view_grades(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -456,7 +258,7 @@ public class AcadOfficeTest {
     @Test
     public void view_grade_test_2() throws Exception {
 
-        String input = "\n2\nCS305\n5098\n";
+        String input = "\n2\nCS305\n4\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -476,7 +278,7 @@ public class AcadOfficeTest {
     @Test
     public void view_grade_test_3() throws Exception {
 
-        String input = "\n3\n2020csb1317\n5098\n";
+        String input = "\n3\n2020csb1317\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -496,7 +298,7 @@ public class AcadOfficeTest {
     @Test
     public void transcript_test() throws Exception {
 
-        String input = "2020csb1317\n5098\n";
+        String input = "3\n2020csb1317\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -506,7 +308,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.transcript(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("Transcript generated successfully."));
@@ -516,7 +318,7 @@ public class AcadOfficeTest {
     @Test
     public void logs_test() throws Exception {
 
-        String input = "\n5098\n";
+        String input = "5\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -526,7 +328,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.view_logs(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("LOGGED IN TIME"));
@@ -536,7 +338,7 @@ public class AcadOfficeTest {
     @Test
     public void calendar_test() throws Exception {
 
-        String input = "\n2022\n2\n5098\n";
+        String input = "6\n2022\n2\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -546,7 +348,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.update_calendar(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("Calendar updated successfully"));
@@ -554,29 +356,9 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void update_profile_test() throws Exception {
-
-        String input = "\n5098\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Select field to update"));
-
-    }
-
-    @Test
     public void update_profile_test_1() throws Exception {
 
-        String input = "\n1\n7008257139\n5098\n";
+        String input = "4\n1\n7008257139\n4\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -587,7 +369,7 @@ public class AcadOfficeTest {
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
 
-        AcadOffice.update_profile(con);
+        AcadOffice.main(con);
 
         String output = out.toString();
         assertTrue(output.contains("Phone Number updated successfully"));
@@ -597,7 +379,7 @@ public class AcadOfficeTest {
     @Test
     public void update_profile_test_2() throws Exception {
 
-        String input = "\n2\nStaff\sDean\soffice\n5098\n";
+        String input = "\n2\nStaff\sDean\soffice\n4\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -617,7 +399,7 @@ public class AcadOfficeTest {
     @Test
     public void update_profile_test_3() throws Exception {
 
-        String input = "\n3\nacadtestpass\n5098\n";
+        String input = "\n3\nacadtestpass\n4\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -631,6 +413,29 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("Password updated successfully"));
+
+    }
+
+    @Test
+    public void main_test_99() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "99\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Select a valid option"));
 
     }
 
