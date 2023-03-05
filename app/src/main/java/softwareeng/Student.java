@@ -367,10 +367,7 @@ public class Student {
 
             if (x == 1) {
                 System.out.println("Course De-Registered Successfully");
-            } else {
-                System.out.println("Course De-Registration Failed");
-            }
-
+            } 
         }
     }
 

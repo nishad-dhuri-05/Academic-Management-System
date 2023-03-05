@@ -89,28 +89,28 @@ public class StudentTest {
 
     }
 
-    // @Test
-    // public void register_course_test_CSTEST() throws Exception {
+    @Test
+    public void register_course_test_CSTEST() throws Exception {
 
-    //     String input = "";
-    //     ByteArrayInputStream in;
+        String input = "";
+        ByteArrayInputStream in;
 
-    //     input = "1\nCSTEST\n7\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
+        input = "1\nCSTEST\n7\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
 
-    //     Scanner sc = new Scanner(System.in);
-    //     Student.sc = sc;
-    //     Student.main(con);
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main(con);
 
-    //     String output = out.toString();
-    //     assertTrue(output.contains("Pre-requisite CSPRETEST not met"));
+        String output = out.toString();
+        assertTrue(output.contains("Pre-requisite CSPRETEST not met"));
 
-    // }
+    }
     @Test
     public void register_course_test_CSCGTEST() throws Exception {
 
