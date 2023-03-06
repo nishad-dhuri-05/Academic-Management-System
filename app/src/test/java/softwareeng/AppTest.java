@@ -62,7 +62,6 @@ public class AppTest {
 
         String[] args = { "arg1" };
         App.main(args);
-        // App.main(args);
 
         String output = out.toString();
         assertTrue(output.contains("Thank you for using our application"));
@@ -81,7 +80,42 @@ public class AppTest {
 
         String[] args = { "arg1" };
         App.main(args);
-        // App.main(args);
+
+        String output = out.toString();
+        assertTrue(output.contains("Thank you for using our application"));
+
+    }
+    @Test
+    public void login_stu() throws Exception {
+
+        String input = "2020csbtest@iitrpr.ac.in\n2020csbtest\n7\n1\n\n\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        String[] args = { "arg1" };
+        App.main(args);
+
+        String output = out.toString();
+        assertTrue(output.contains("Thank you for using our application"));
+
+    }
+    @Test
+    public void login_stu_1() throws Exception {
+
+        String input = "2020csbtest@iitrpr.ac.in\n2020csbtest\n7\n0\n2020csbtest@iitrpr.ac.in\n2020csbtest\n7\n1\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        String[] args = { "arg1" };
+        App.main(args);
 
         String output = out.toString();
         assertTrue(output.contains("Thank you for using our application"));

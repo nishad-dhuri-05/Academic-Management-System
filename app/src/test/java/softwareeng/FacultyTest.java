@@ -51,7 +51,7 @@ public class FacultyTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\nCSOFFTEST\nCSE\n2020\n7.5\nPC\nNo\n7\n\n\n";
+        input = "1\nCSOFFTEST\nCSE\n2020\n7.5\nPC\n\nEE\n2019\n7.5\nPE\nNo\n7\n\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -65,6 +65,28 @@ public class FacultyTest {
 
         String output = out.toString();
         assertTrue(output.contains("Course offering successfully registered !"));
+
+    }
+    @Test
+    public void register_course_offering_test_fail() throws Exception {
+
+        String input = "";
+        ByteArrayInputStream in;
+
+        input = "1\nCSOFFFAILTEST\n\n7\n\n\n";
+        in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Please offer a course from your department only"));
 
     }
 
@@ -258,6 +280,25 @@ public class FacultyTest {
 
         String output = out.toString();
         assertTrue(output.contains("Phone number updated successfully"));
+
+    }
+    @Test
+    public void update_profile_test_1_fail() throws Exception {
+
+        String input = "6\n1\n70082571399\n6\n7\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Faculty.sc = sc;
+        Faculty.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Invalid"));
 
     }
 

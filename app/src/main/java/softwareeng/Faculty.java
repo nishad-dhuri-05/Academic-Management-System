@@ -6,6 +6,8 @@ import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Faculty {
     static Scanner sc = new Scanner(System.in);
@@ -263,11 +265,9 @@ public class Faculty {
                     course_code, current_start_acad_year, current_semester);
 
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            // int n = st.executeUpdate(query);
+            int n = st.executeUpdate(query);
 
-            if (m == 1) {
-                System.out.println("Course Offering De-Registered Successfully !");
-            }
+            System.out.println("Course Offering De-Registered Successfully !");
 
         }
 
@@ -398,9 +398,7 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 int n = st.executeUpdate(query);
 
-                if (n == 1) {
-                    System.out.println("Grades Uploaded Successfully !");
-                }
+                System.out.println("Grades Uploaded Successfully !");
             }
         }
 
@@ -504,15 +502,22 @@ public class Faculty {
 
             if (option == 1) {
                 System.out.println("Enter new " + phone_number_field);
-                String new_phone_number = sc.nextLine();
+                String new_number = sc.nextLine();
 
-                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_phone_number,
-                        email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");
+                Matcher match = ptrn.matcher(new_number);
 
-                if (x == 1) {
+                boolean b = match.find() && match.group().equals(new_number);
+
+                if (b) {
+
+                    query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
+                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    x = st.executeUpdate(query);
+
                     System.out.println("Phone number updated successfully");
+                } else {
+                    System.out.println("Invalid Phone Number");
                 }
 
             } else if (option == 2) {
@@ -523,9 +528,7 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
                     System.out.println("Name updated successfully");
-                }
 
             } else if (option == 3) {
                 System.out.println("Enter new " + department_field);
@@ -535,9 +538,7 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Department updated successfully");
-                }
+                System.out.println("Department updated successfully");
 
             } else if (option == 4) {
                 System.out.println("Enter new " + password_field);
@@ -547,9 +548,7 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Password updated successfully");
-                }
+                System.out.println("Password updated successfully");
 
             } else if (option == 5) {
                 System.out.println("Enter new " + joining_data_field + " ( Format : YYYY-MM-DD)");
@@ -559,9 +558,7 @@ public class Faculty {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Joining date updated successfully");
-                }
+                System.out.println("Joining date updated successfully");
 
             } else {
                 break;

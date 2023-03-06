@@ -36,6 +36,7 @@ public class App {
                 Faculty.sc = sc;
                 Faculty.main(con);
             } else if (role.equals("student")) {
+                Student.sc = sc;
                 Student.main(con);
             } else {
                 System.out.println("Logged out");

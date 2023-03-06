@@ -6,13 +6,16 @@ import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AcadOffice {
 
     static Scanner sc = new Scanner(System.in);
+
     public static void main(Connection con) throws Exception {
 
-        //  
+        //
         String query = "";
         Statement st;
         ResultSet rs;
@@ -72,28 +75,26 @@ public class AcadOffice {
             } else if (option == 7) {
                 System.out.println("LOGGING OUT ... ");
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
-                
+
                 query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
-                + role
-                + "' and logged_in = '" + logged_in + "';";
+                        + role
+                        + "' and logged_in = '" + logged_in + "';";
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
-                
+
                 System.out.println("LOGGED OUT SUCCESSFULLY ");
                 return;
-            }else {
+            } else {
                 System.out.println("Select a valid option \n");
             }
 
             System.out.println("\n**************************************************");
         }
 
-        
-
     }
 
     public static void catalog(Connection con) throws Exception {
-         
+
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -260,9 +261,7 @@ public class AcadOffice {
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
 
-                        if (x == 1) {
-                            System.out.println("Pre-requisite added successfully \n");
-                        } 
+                        System.out.println("Pre-requisite added successfully \n");
 
                     } else if (option_pre == 2) {
                         System.out.println("\nEnter pre-requisite to be deleted ");
@@ -273,12 +272,8 @@ public class AcadOffice {
                         Statement st_ = con.createStatement();
                         x = st_.executeUpdate(query_);
 
-                        if (x == 1) {
-                            System.out.println("Pre-requisite deleted successfully \n");
-                        }
-
-                    } 
-                    else{
+                        System.out.println("Pre-requisite deleted successfully \n");
+                    } else {
                         break;
                     }
 
@@ -301,27 +296,22 @@ public class AcadOffice {
                             + "'; delete from course_catalog where course_code='" + course_code + "';";
                     Statement st_ = con.createStatement();
                     int x = st_.executeUpdate(query_);
-
+                    System.out.println("Course Deleted Successfully");
+                } else {
+                    System.out.println("Deletion Cancelled \n");
                 }
-
-                System.out.println("Course Deleted Successfully");
 
             } else if (option == 5) {
                 return;
-            } else if (option == 5098) {
-                break;
             } else {
                 System.out.println("Select a valid option \n");
             }
         }
 
-          
-
     }
 
     public static void view_grades(Connection con) throws Exception {
 
-         
         while (true) {
 
             System.out.println("\n Select Operation : ");
@@ -378,7 +368,6 @@ public class AcadOffice {
             System.out.println(fmt);
 
         }
-          
 
     }
 
@@ -393,7 +382,7 @@ public class AcadOffice {
         ResultSet rs;
 
         System.out.println("Enter student entry no.  \n");
-         
+
         entry_no = sc.nextLine();
 
         query = "select * from auth where entry_no = '" + entry_no + "'";
@@ -403,80 +392,85 @@ public class AcadOffice {
         if (rs.next()) {
             batch = rs.getInt("batch");
             department = rs.getString("department");
+
+            String filename = String.format("transcripts/%s_transcript.txt", entry_no);
+
+            File fileobj = new File(filename);
+            fileobj.createNewFile();
+
+            FileWriter writer = new FileWriter(filename);
+            writer.write(String.format(
+                    "===================================== TRANSCRIPT - %s ===================================== \n\n",
+                    entry_no));
+            writer.write(
+                    "                               INDIAN INSTITUTE OF TECHNOLOGY, ROPAR                            \n\n");
+            writer.write(
+                    String.format("Entry Number : %s \nBatch : %d \nDepartment : %s \n\n", entry_no, batch,
+                            department));
+            writer.write(String.format(
+                    "========================================== COURSES UNDERTAKEN ========================================== \n\n"));
+
+            query = String.format(
+                    "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED' ;",
+                    entry_no);
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = st.executeQuery(query);
+
+            String text = String.format("\n %20s | %20s | %20s| %20s | %20s\n", "COURSE CODE", "ACAD YEAR", "SEMESTER",
+                    "GRADE", "STATUS");
+
+            while (rs.next()) {
+                String course_code = rs.getString("course_code");
+                String grade = rs.getString("grade");
+                String status = rs.getString("status");
+                String acad_year = rs.getString("start_acad_year");
+                String semester = rs.getString("semester");
+
+                text = String.format("\n %20s | %20s | %20s | %20s | %20s \n", course_code, acad_year, semester, grade,
+                        status);
+                writer.write(text);
+
+            }
+
+            float cgpa = get_cgpa(entry_no, con);
+            writer.write("CGPA : " + cgpa);
+
+            // Fetch Calendar
+
+            int current_start_acad_year = 0;
+            int current_semester = 0;
+
+            query = "Select * from calendar where status='RUNNING' ;";
+
+            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            rs = st.executeQuery(query);
+
+            while (rs.next()) {
+                current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
+                current_semester = Integer.parseInt(rs.getString("semester"));
+            }
+
+            int prev_acad_year = 0;
+            int prev_semester = 0;
+
+            if (current_semester == 2) {
+                prev_acad_year = current_start_acad_year;
+                prev_semester = 1;
+            } else {
+                prev_acad_year = current_start_acad_year - 1;
+                prev_semester = 2;
+            }
+
+            writer.write(
+                    String.format("\n\nThis transcript is generated for all courses till YEAR : %d , SEMESTER : %d",
+                            prev_acad_year, prev_semester));
+            writer.close();
+
+            System.out.println("Transcript generated successfully. \n");
         }
-
-        String filename = String.format("transcripts/%s_transcript.txt", entry_no);
-
-        File fileobj = new File(filename);
-        fileobj.createNewFile();
-
-        FileWriter writer = new FileWriter(filename);
-        writer.write(String.format(
-                "===================================== TRANSCRIPT - %s ===================================== \n\n",
-                entry_no));
-        writer.write(
-                "                               INDIAN INSTITUTE OF TECHNOLOGY, ROPAR                            \n\n");
-        writer.write(
-                String.format("Entry Number : %s \nBatch : %d \nDepartment : %s \n\n", entry_no, batch, department));
-        writer.write(String.format(
-                "========================================== COURSES UNDERTAKEN ========================================== \n\n"));
-
-        query = String.format(
-                "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED' ;",
-                entry_no);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
-
-        String text = String.format("\n %20s | %20s | %20s| %20s | %20s\n", "COURSE CODE", "ACAD YEAR", "SEMESTER",
-                "GRADE", "STATUS");
-
-        while (rs.next()) {
-            String course_code = rs.getString("course_code");
-            String grade = rs.getString("grade");
-            String status = rs.getString("status");
-            String acad_year = rs.getString("start_acad_year");
-            String semester = rs.getString("semester");
-
-            text = String.format("\n %20s | %20s | %20s | %20s | %20s \n", course_code, acad_year, semester, grade,
-                    status);
-            writer.write(text);
-
+        else{
+            System.out.println("Invalid entry number. \n");
         }
-
-        float cgpa = get_cgpa(entry_no, con);
-        writer.write("CGPA : " + cgpa);
-
-        // Fetch Calendar
-
-        int current_start_acad_year = 0;
-        int current_semester = 0;
-
-        query = "Select * from calendar where status='RUNNING' ;";
-
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
-
-        while (rs.next()) {
-            current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
-            current_semester = Integer.parseInt(rs.getString("semester"));
-        }
-
-        int prev_acad_year = 0;
-        int prev_semester = 0;
-
-        if (current_semester == 2) {
-            prev_acad_year = current_start_acad_year;
-            prev_semester = 1;
-        } else {
-            prev_acad_year = current_start_acad_year - 1;
-            prev_semester = 2;
-        }
-
-        writer.write(String.format("\n\nThis transcript is generated for all courses till YEAR : %d , SEMESTER : %d",
-                prev_acad_year, prev_semester));
-        writer.close();
-
-        System.out.println("Transcript generated successfully. \n");
 
     }
 
@@ -526,8 +520,6 @@ public class AcadOffice {
     }
 
     public static void update_profile(Connection con) throws Exception {
-        
-         
 
         while (true) {
 
@@ -563,12 +555,20 @@ public class AcadOffice {
                 System.out.println("Enter new " + phone_number);
                 String new_number = sc.nextLine();
 
-                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");
+                Matcher match = ptrn.matcher(new_number);
 
-                if (x == 1) {
+                boolean b = match.find() && match.group().equals(new_number);
+
+                if (b) {
+
+                    query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
+                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    x = st.executeUpdate(query);
+
                     System.out.println("Phone Number updated successfully");
+                } else {
+                    System.out.println("Invalid Phone Number");
                 }
 
             } else if (option == 2) {
@@ -579,9 +579,7 @@ public class AcadOffice {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Name updated successfully");
-                }
+                System.out.println("Name updated successfully");
 
             } else if (option == 3) {
                 System.out.println("Enter new " + password_field);
@@ -591,13 +589,11 @@ public class AcadOffice {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Password updated successfully");
-                }
+                System.out.println("Password updated successfully");
 
-            }else{
+            } else {
                 return;
-            } 
+            }
         }
     }
 
@@ -635,7 +631,6 @@ public class AcadOffice {
         String query = "";
         Statement st;
         ResultSet rs;
-         
 
         query = "select * from calendar;";
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -676,9 +671,7 @@ public class AcadOffice {
         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         int x = st.executeUpdate(query);
 
-        if (x == 1) {
-            System.out.println("Calendar updated successfully");
-        }
+        System.out.println("Calendar updated successfully");
 
     }
 

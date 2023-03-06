@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Student {
     
@@ -286,9 +288,7 @@ public class Student {
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             x = st.executeUpdate(query);
 
-            if (x == 1) {
-                System.out.println("Course Registered Successfully");
-            }
+            System.out.println("Course Registered Successfully");
         } else {
             System.out.println("Course Registration Failed");
         }
@@ -365,9 +365,7 @@ public class Student {
             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             x = st.executeUpdate(query);
 
-            if (x == 1) {
-                System.out.println("Course De-Registered Successfully");
-            } 
+            System.out.println("Course De-Registered Successfully");
         }
     }
 
@@ -641,13 +639,23 @@ public class Student {
                 System.out.println("Enter new " + phone_number);
                 String new_number = sc.nextLine();
 
-                query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");  
+                Matcher match = ptrn.matcher(new_number);  
+                boolean b = match.find() && match.group().equals(new_number);
 
-                if (x == 1) {
+                if (b){
+
+                    query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
+                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    x = st.executeUpdate(query);
+    
+    
                     System.out.println("Phone Number updated successfully");
                 }
+                else{
+                    System.out.println("Invalid Phone Number");
+                }
+                
 
             } else if (option == 2) {
                 System.out.println("Enter new " + name_field);
@@ -657,9 +665,7 @@ public class Student {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Name updated successfully");
-                }
+                System.out.println("Name updated successfully");
 
             } else if (option == 3) {
                 System.out.println("Enter new " + password_field);
@@ -669,9 +675,7 @@ public class Student {
                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 x = st.executeUpdate(query);
 
-                if (x == 1) {
-                    System.out.println("Password updated successfully");
-                }
+                System.out.println("Password updated successfully");
 
             } else {
                 break;

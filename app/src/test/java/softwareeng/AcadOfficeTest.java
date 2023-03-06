@@ -193,6 +193,25 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Course Deleted Successfully"));
 
     }
+    @Test
+    public void catalog_4_test_fail() throws Exception {
+
+        String input = "\n4\nTEST\n0\n5\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.catalog(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Deletion Cancelled"));
+
+    }
 
     @Test
     public void catalog_5_test() throws Exception {
@@ -314,6 +333,25 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Transcript generated successfully."));
 
     }
+    @Test
+    public void transcript_test_fail() throws Exception {
+
+        String input = "3\n2020csb131799\n7\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Invalid entry number."));
+
+    }
 
     @Test
     public void logs_test() throws Exception {
@@ -373,6 +411,27 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("Phone Number updated successfully"));
+
+    }
+
+    @Test
+    public void update_profile_test_1_fail() throws Exception {
+
+        String input = "4\n1\n70082571399\n4\n7\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+
+        AcadOffice.main(con);
+
+        String output = out.toString();
+        assertTrue(output.contains("Invalid"));
 
     }
 
