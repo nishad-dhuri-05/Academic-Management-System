@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 public class User {
 
-    static Scanner sc = new Scanner(System.in);
     static DaoI dao = new Dao();
 
     static String query = "";

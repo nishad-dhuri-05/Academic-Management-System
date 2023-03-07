@@ -9,6 +9,11 @@ import java.util.Scanner;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.FixMethodOrder;
+
+import org.junit.runners.MethodSorters;
+
+@FixMethodOrder(MethodSorters.DEFAULT)
 
 public class StudentTest {
 

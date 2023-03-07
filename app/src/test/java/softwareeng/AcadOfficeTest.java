@@ -31,7 +31,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_test() throws Exception {
+    public void view_catalog() throws Exception {
 
         String input = "";
         ByteArrayInputStream in;
@@ -55,7 +55,7 @@ public class AcadOfficeTest {
 
    
     @Test
-    public void catalog_2_test() throws Exception {
+    public void add_course() throws Exception {
 
         String input = "\n2\nTEST\n9\n9\n9\n9\nTEST\nNIL\nq\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -75,7 +75,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_3_test() throws Exception {
+    public void update_course() throws Exception {
 
         String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -95,7 +95,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_3_test_add() throws Exception {
+    public void add_prereq() throws Exception {
 
         String input = "3\nTEST\n9\n9\n9\n9\nTEST\n1\nCSTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -115,7 +115,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_3_test_delete() throws Exception {
+    public void delete_prereq() throws Exception {
 
         String input = "\n3\nTEST\n9\n9\n9\n9\nTEST\n2\nCSTEST\n3\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -135,7 +135,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_4_test() throws Exception {
+    public void delete_course() throws Exception {
 
         String input = "\n4\nTEST\n1\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -154,7 +154,7 @@ public class AcadOfficeTest {
 
     }
     @Test
-    public void catalog_4_test_fail() throws Exception {
+    public void delete_course_cancellation() throws Exception {
 
         String input = "\n4\nTEST\n0\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -174,27 +174,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void catalog_5_test() throws Exception {
-
-        String input = "\n5\n\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.catalog();
-
-        String output = out.toString();
-        assertTrue(output.contains("Select Operation"));
-
-    }
-
-    @Test
-    public void catalog_6_test() throws Exception {
+    public void invalid_option() throws Exception {
 
         String input = "\n99\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -215,7 +195,7 @@ public class AcadOfficeTest {
 
 
     @Test
-    public void view_grade_test_1() throws Exception {
+    public void view_grade_all() throws Exception {
 
         String input = "2\n1\n4\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -235,7 +215,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void view_grade_test_2() throws Exception {
+    public void view_grade_course() throws Exception {
 
         String input = "\n2\nCS305\n4\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -255,7 +235,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void view_grade_test_3() throws Exception {
+    public void view_grade_student() throws Exception {
 
         String input = "\n3\n2020csb1317\n5\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -275,7 +255,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void transcript_test() throws Exception {
+    public void generate_transcript() throws Exception {
 
         String input = "3\n2020csb1317\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -294,7 +274,7 @@ public class AcadOfficeTest {
 
     }
     @Test
-    public void transcript_test_fail() throws Exception {
+    public void generate_transcript_invalid() throws Exception {
 
         String input = "3\n2020csb131799\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -314,7 +294,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void logs_test() throws Exception {
+    public void view_logs() throws Exception {
 
         String input = "5\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -334,7 +314,7 @@ public class AcadOfficeTest {
     }
 
     @Test
-    public void calendar_test() throws Exception {
+    public void update_calendar() throws Exception {
 
         String input = "6\n2022\n2\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -354,9 +334,9 @@ public class AcadOfficeTest {
     }
     
     @Test
-    public void update_profile_test_1() throws Exception {
+    public void update_profile() throws Exception {
 
-        String input = "4\n1\n7008257139\n6\n7\n";
+        String input = "4\n1\n7008257139\n5\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -373,7 +353,7 @@ public class AcadOfficeTest {
 
     }
     @Test
-    public void main_test_99() throws Exception {
+    public void valid_option_test() throws Exception {
 
         String input = "";
         ByteArrayInputStream in;

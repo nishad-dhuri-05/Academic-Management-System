@@ -195,7 +195,7 @@ public class FacultyTest {
     }
 
     @Test
-    public void view_grade_test_1() throws Exception {
+    public void view_grade_all() throws Exception {
 
         String input = "5\n1\n4\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -215,7 +215,7 @@ public class FacultyTest {
     }
 
     @Test
-    public void view_grade_test_2() throws Exception {
+    public void view_grade_course() throws Exception {
 
         String input = "\n2\nCSTEST\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -235,7 +235,7 @@ public class FacultyTest {
     }
 
     @Test
-    public void view_grade_test_3() throws Exception {
+    public void view_grade_student() throws Exception {
 
         String input = "\n3\n2020csbtest\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
@@ -255,9 +255,9 @@ public class FacultyTest {
     }
     
     @Test
-    public void update_profile_test_1() throws Exception {
+    public void update_profile_test() throws Exception {
 
-        String input = "6\n1\n7008257139\n6\n7\n";
+        String input = "6\n1\n7008257139\n5\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -296,7 +296,7 @@ public class FacultyTest {
     @Test
     public void update_profile_test_2() throws Exception {
 
-        String input = "\n2\nfaculty\stest\n7\n";
+        String input = "\n2\nfacultytest\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
