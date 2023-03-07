@@ -66,7 +66,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("COURSE CODE"));
@@ -87,7 +87,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Course Added Successfully."));
@@ -107,7 +107,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Course Updated Successfully."));
@@ -127,7 +127,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Pre-requisite added successfully"));
@@ -147,7 +147,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Pre-requisite deleted successfully"));
@@ -167,7 +167,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Course Deleted Successfully"));
@@ -186,7 +186,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Deletion Cancelled"));
@@ -206,7 +206,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Select Operation"));
@@ -226,7 +226,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.catalog(con);
+        AcadOffice.catalog();
 
         String output = out.toString();
         assertTrue(output.contains("Select Operation"));
@@ -247,7 +247,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -267,7 +267,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.view_grades(con);
+        AcadOffice.view_grades();
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -287,7 +287,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.view_grades(con);
+        AcadOffice.view_grades();
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -307,7 +307,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("Transcript generated successfully."));
@@ -326,7 +326,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("Invalid entry number."));
@@ -346,7 +346,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("LOGGED IN TIME"));
@@ -366,7 +366,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("Calendar updated successfully"));
@@ -389,7 +389,7 @@ public class AcadOfficeTest {
 
         Scanner sc = new Scanner(System.in);
         AcadOffice.sc = sc;
-        AcadOffice.main(con);
+        AcadOffice.main();
 
         String output = out.toString();
         assertTrue(output.contains("Select a valid option"));

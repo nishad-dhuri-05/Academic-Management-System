@@ -12,17 +12,17 @@ import java.util.regex.Pattern;
 public class Faculty extends User {
     static Scanner sc = new Scanner(System.in);
 
-    public static void main(Connection con) throws Exception {
+    static DaoI dao = new Dao();
 
-        String query = "";
-        Statement st;
-        ResultSet rs;
-        int x;
+    static String query = "";
+    static ResultSet rs;
+    static int x;
 
+    public static void main() throws Exception {
+
+        
         query = "Select * from logs;";
-
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);  
 
         String email = "", role = "", logged_in = "";
 
@@ -53,29 +53,28 @@ public class Faculty extends User {
 
             if (option == 1) {
                 System.out.println("================= COURSE OFFERING REGISTRATION =================");
-                register_course_offering(con);
+                register_course_offering();
             } else if (option == 2) {
                 System.out.println("================= COURSE OFFERING DE-REGISTRATION =================");
-                deregister_course_offering(con);
+                deregister_course_offering();
             } else if (option == 3) {
                 System.out.println("================= COURSE CATALOG =================");
-                view_catalog(con);
+                view_catalog();
             } else if (option == 4) {
                 System.out.println("================= UPLOAD GRADES =================");
-                upload_grades(con);
+                upload_grades();
             } else if (option == 5) {
                 System.out.println("================= VIEW GRADES =================");
-                view_grades(con);
+                view_grades();
             } else if (option == 6) {
-                update_profile(con, sc);
+                update_profile(sc);
             } else if (option == 7) {
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
 
                 query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
                         + role
                         + "' and logged_in = '" + logged_in + "';";
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                x = dao.updatequery(query);
                 return;
             } else {
                 System.out.println("Select a valid option \n");
@@ -86,7 +85,7 @@ public class Faculty extends User {
 
     }
 
-    public static void register_course_offering(Connection con) throws Exception {
+    public static void register_course_offering() throws Exception {
 
         String query = "";
         Statement st;
@@ -99,8 +98,7 @@ public class Faculty extends User {
 
         query = "Select * from calendar where status='RUNNING' ;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
@@ -112,8 +110,7 @@ public class Faculty extends User {
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
@@ -122,8 +119,8 @@ public class Faculty extends User {
 
         String course_dept = "", faculty_dept = "";
         query = "Select department from auth where email='" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             faculty_dept = rs.getString("department");
@@ -133,8 +130,7 @@ public class Faculty extends User {
         String course_code = sc.nextLine();
 
         query = "Select department from course_catalog where course_code='" + course_code + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             course_dept = rs.getString("department");
@@ -147,8 +143,7 @@ public class Faculty extends User {
                     "Insert into course_offering(course_code,start_acad_year,semester,instructor_email,offering_dept,status) values ('%s','%d','%d','%s','%s','%s');",
                     course_code, current_start_acad_year, current_semester, email, course_dept, "RUNNING");
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            int m = st.executeUpdate(query);
+            x = dao.updatequery(query);
 
             System.out.println(
                     "Enter Restrictions (Offered Department,Batch,Minimum CGPA,Type) \n ");
@@ -182,8 +177,7 @@ public class Faculty extends User {
                         course_code, current_start_acad_year, current_semester, offered_dept, batch, min_cgpa, type);
 
                 System.out.println(query);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                int x = st.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 String confirmation = "";
                 System.out.println("Do you want to add another restriction ? (Yes/No)");
@@ -203,11 +197,7 @@ public class Faculty extends User {
 
     }
 
-    public static void deregister_course_offering(Connection con) throws Exception {
-
-        String query = "";
-        Statement st;
-        ResultSet rs;
+    public static void deregister_course_offering() throws Exception {
 
         // Fetch Calendar
 
@@ -216,21 +206,19 @@ public class Faculty extends User {
 
         query = "Select * from calendar where status='RUNNING' ;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
             current_semester = Integer.parseInt(rs.getString("semester"));
-        }
+        } 
 
         // Fetch Email
 
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
@@ -245,8 +233,7 @@ public class Faculty extends User {
                 "select * from course_offering where course_code = '%s' and start_acad_year = %d and semester = %d and instructor_email = '%s';",
                 course_code, current_start_acad_year, current_semester, email);
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         if (!rs.isBeforeFirst()) {
             System.out.println("Course offering not registered ! Course Offering De-Registration Failed");
@@ -257,15 +244,13 @@ public class Faculty extends User {
                     course_code, current_start_acad_year, current_semester, email, course_code, current_start_acad_year,
                     current_semester);
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            int m = st.executeUpdate(query);
+            x = dao.updatequery(query);
 
             query = String.format(
                     "update enrollments set status = 'INSTRUCTOR WITHDREW' where course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                     course_code, current_start_acad_year, current_semester);
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            int n = st.executeUpdate(query);
+            x = dao.updatequery(query);
 
             System.out.println("Course Offering De-Registered Successfully !");
 
@@ -273,15 +258,11 @@ public class Faculty extends User {
 
     }
 
-    public static void view_catalog(Connection con) throws Exception {
-
-        String query = "";
-        Statement st;
-        ResultSet rs;
+    public static void view_catalog() throws Exception {
 
         query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        
+        rs = dao.readquery(query);
 
         Formatter fmt = new Formatter();
         fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
@@ -304,7 +285,7 @@ public class Faculty extends User {
 
     }
 
-    public static void upload_grades(Connection con) throws Exception {
+    public static void upload_grades() throws Exception {
 
         HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
         grade_map.put("A", 10);
@@ -317,10 +298,6 @@ public class Faculty extends User {
         grade_map.put("E", 2);
         grade_map.put("F", 0);
 
-        String query = "";
-        Statement st;
-        ResultSet rs;
-
         // Fetch Calendar
 
         int current_start_acad_year = 0;
@@ -328,8 +305,7 @@ public class Faculty extends User {
 
         query = "Select * from calendar where status='RUNNING';";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
@@ -341,8 +317,7 @@ public class Faculty extends User {
         String email = "";
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
@@ -360,8 +335,7 @@ public class Faculty extends User {
                 + current_start_acad_year + " and semester = " + current_semester + " and instructor_email = '" + email
                 + "';";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String check_email = "";
 
@@ -395,8 +369,7 @@ public class Faculty extends User {
                             grade, course_code, current_start_acad_year, current_semester, entry_no);
                 }
 
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                int n = st.executeUpdate(query);
+                x= dao.updatequery(query);
 
                 System.out.println("Grades Uploaded Successfully !");
             }
@@ -404,7 +377,7 @@ public class Faculty extends User {
 
     }
 
-    public static void view_grades(Connection con) throws Exception {
+    public static void view_grades() throws Exception {
 
         while (true) {
 
@@ -418,9 +391,7 @@ public class Faculty extends User {
             option = sc.nextInt();
             sc.nextLine();
 
-            String query = "";
-            Statement st;
-
+       
             if (option == 1) {
                 query = "select * from enrollments where status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED'";
 
@@ -444,8 +415,7 @@ public class Faculty extends User {
                 return;
             }
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = dao.readquery(query);
 
             Formatter fmt = new Formatter();
             fmt.format("\n %30s | %30s | %30s | %30s\n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
@@ -463,121 +433,5 @@ public class Faculty extends User {
         }
 
     }
-
-    // public static void update_profile(Connection con) throws Exception {
-
-    // while (true) {
-
-    // String phone_number_field = "phone_number";
-    // String name_field = "name";
-    // String department_field = "department";
-    // String password_field = "password";
-    // String joining_data_field = "joining_date";
-
-    // System.out.println(" \n Select field to update : ");
-    // System.out.println("1. " + phone_number_field);
-    // System.out.println("2. " + name_field);
-    // System.out.println("3. " + department_field);
-    // System.out.println("4. " + password_field);
-    // System.out.println("5. " + joining_data_field);
-    // System.out.println("6. Go Back ");
-
-    // int option = 0;
-    // option = sc.nextInt();
-    // sc.nextLine();
-
-    // String email = "";
-    // String query = "";
-    // Statement st;
-    // ResultSet rs;
-    // int x;
-
-    // query = "Select email from logs;";
-
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // rs = st.executeQuery(query);
-
-    // rs.last();
-    // email = rs.getString("email");
-
-    // if (option == 1) {
-    // System.out.println("Enter new " + phone_number_field);
-    // String new_number = sc.nextLine();
-
-    // Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");
-    // Matcher match = ptrn.matcher(new_number);
-
-    // boolean b = match.find() && match.group().equals(new_number);
-
-    // if (b) {
-
-    // query = String.format("update auth set phone_number = '%s' where email = '%s'
-    // ", new_number, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Phone number updated successfully");
-    // } else {
-    // System.out.println("Invalid Phone Number");
-    // }
-
-    // } else if (option == 2) {
-    // System.out.println("Enter new " + name_field);
-    // String new_name = sc.nextLine();
-
-    // query = String.format("update auth set name = '%s' where email = '%s'",
-    // new_name, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Name updated successfully");
-
-    // } else if (option == 3) {
-    // System.out.println("Enter new " + department_field);
-    // String new_dept = sc.nextLine();
-
-    // query = String.format("update auth set department = '%s' where email = '%s'",
-    // new_dept, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Department updated successfully");
-
-    // } else if (option == 4) {
-    // System.out.println("Enter new " + password_field);
-    // String new_pass = sc.nextLine();
-
-    // query = String.format("update auth set password = '%s' where email = '%s' ",
-    // new_pass, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Password updated successfully");
-
-    // } else if (option == 5) {
-    // System.out.println("Enter new " + joining_data_field + " ( Format :
-    // YYYY-MM-DD)");
-    // String new_doj = sc.nextLine();
-
-    // query = String.format("update auth set joining_date = '%s' where email = '%s'
-    // ", new_doj, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Joining date updated successfully");
-
-    // } else {
-    // break;
-    // }
-
-    // }
-
-    // }
 
 }

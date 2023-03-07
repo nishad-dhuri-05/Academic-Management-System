@@ -7,7 +7,7 @@ public class Dao implements DaoI {
 
     static Connection con;
 
-    public Dao() {
+    public Dao(){
 
         try {
             ResourceBundle rd = ResourceBundle.getBundle("config");
@@ -16,39 +16,27 @@ public class Dao implements DaoI {
             String password = rd.getString("password");
 
             Class.forName("org.postgresql.Driver");
-            Connection con = DriverManager.getConnection(url, username, password);
+            con = DriverManager.getConnection(url, username, password);
+            
         } catch (Exception e) {
-        }
+        }        
 
     }
 
     @Override
-    public int updatequery(String query) {
+    public int updatequery(String query) throws Exception {
 
-        Statement st;
-        int x = 0;
-        try {
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            x = st.executeUpdate(query);
+        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        int x = st.executeUpdate(query);
 
-        } catch (Exception e) {
-        }
         return x;
-
     }
 
     @Override
-    public ResultSet readquery(String query) {
+    public ResultSet readquery(String query) throws Exception {
+        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rs = st.executeQuery(query);
 
-        Statement st;
-        ResultSet rs = null;
-
-        try {
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
-        } catch (Exception e) {
-
-        }
         return rs;
     }
 

@@ -7,7 +7,13 @@ import java.util.Scanner;
 
 public class Auth {
     static Scanner sc = new Scanner(System.in);
-    public static String main(Connection con) throws Exception{
+    static DaoI dao = new Dao();
+
+    static String query = "";
+    static ResultSet rs;
+    static int x;
+
+    public static String main() throws Exception{
 
         String role = "";
         String email = "";
@@ -20,8 +26,8 @@ public class Auth {
         String user_pass = sc.nextLine();
 
         String query = "select name,role,password from auth where email='" + email + "'";
-        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = st.executeQuery(query);
+        rs = dao.readquery(query);
+
         while (rs.next()) {
             role = rs.getString("role");
             email_pass = rs.getString("password");
@@ -33,11 +39,11 @@ public class Auth {
             Timestamp logged_in = new Timestamp(System.currentTimeMillis());
 
             System.out.println("LOGGED IN TIME : " + logged_in);
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
                     + "');";
-            int m = st.executeUpdate(query);
+
+            x = dao.updatequery(query);
 
             System.out.println("\n==================================================\n Welcome " + user_name);
             System.out.println("You are logged in as " + role);

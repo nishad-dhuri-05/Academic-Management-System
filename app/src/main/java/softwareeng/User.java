@@ -11,7 +11,14 @@ import java.util.regex.Pattern;
 
 public class User {
 
-    public static void update_profile(Connection con, Scanner sc) throws Exception {
+    static Scanner sc = new Scanner(System.in);
+    static DaoI dao = new Dao();
+
+    static String query = "";
+    static ResultSet rs;
+    static int x;
+
+    public static void update_profile(Scanner sc) throws Exception {
 
         while (true) {
 
@@ -33,15 +40,9 @@ public class User {
             sc.nextLine();
 
             String email = "";
-            String query = "";
-            Statement st;
-            ResultSet rs;
-            int x;
 
             query = "Select email from logs;";
-
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
+            rs = dao.readquery(query);
 
             rs.last();
             email = rs.getString("email");
@@ -58,8 +59,7 @@ public class User {
                 if (b) {
 
                     query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
-                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                    x = st.executeUpdate(query);
+                    x = dao.updatequery(query);
 
                     System.out.println("Phone number updated successfully");
                 } else {
@@ -71,8 +71,7 @@ public class User {
                 String new_name = sc.nextLine();
 
                 query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 System.out.println("Name updated successfully");
 
@@ -81,8 +80,7 @@ public class User {
                 String new_pass = sc.nextLine();
 
                 query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 System.out.println("Password updated successfully");
 
@@ -91,8 +89,7 @@ public class User {
                 String new_doj = sc.nextLine();
 
                 query = String.format("update auth set joining_date = '%s' where email = '%s' ", new_doj, email);
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 System.out.println("Joining date updated successfully");
 

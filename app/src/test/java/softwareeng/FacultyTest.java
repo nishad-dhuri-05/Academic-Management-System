@@ -61,7 +61,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Course offering successfully registered !"));
@@ -83,7 +83,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Please offer a course from your department only"));
@@ -106,7 +106,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Grades Uploaded Successfully !"));
@@ -128,7 +128,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("You are not the instructor for this course offering !"));
@@ -151,7 +151,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Course Offering De-Registered Successfully !"));
@@ -173,7 +173,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Course Offering De-Registration Failed"));
@@ -196,7 +196,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("COURSE CATALOG"));
@@ -216,7 +216,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("VIEW GRADES"));
@@ -236,7 +236,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.view_grades(con);
+        Faculty.view_grades();
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -256,7 +256,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.view_grades(con);
+        Faculty.view_grades();
 
         String output = out.toString();
         assertTrue(output.contains("GRADE"));
@@ -276,7 +276,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Phone number updated successfully"));
@@ -295,7 +295,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Invalid"));
@@ -315,7 +315,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con,sc);
+        Faculty.update_profile(sc);
 
         String output = out.toString();
         assertTrue(output.contains("Name updated successfully"));
@@ -334,7 +334,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con,sc);
+        Faculty.update_profile(sc);
 
         String output = out.toString();
         assertTrue(output.contains("Password updated successfully"));
@@ -353,7 +353,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con,sc);
+        Faculty.update_profile(sc);
 
         String output = out.toString();
         assertTrue(output.contains("Joining date updated successfully"));
@@ -376,7 +376,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.main(con);
+        Faculty.main();
 
         String output = out.toString();
         assertTrue(output.contains("Select a valid option"));

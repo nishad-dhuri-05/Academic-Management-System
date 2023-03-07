@@ -6,8 +6,7 @@ import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 public class AcadOffice extends User {
 
@@ -15,13 +14,10 @@ public class AcadOffice extends User {
     static DaoI dao = new Dao();
 
     static String query = "";
-    static Statement st;
     static ResultSet rs;
     static int x;
 
-    public static void main(Connection con) throws Exception {
-
-        //
+    public static void main() throws Exception {
 
         query = "Select * from logs;";
         rs = dao.readquery(query);
@@ -55,22 +51,22 @@ public class AcadOffice extends User {
 
             if (option == 1) {
                 System.out.println("================= COURSE CATALOG =================");
-                catalog(con);
+                catalog();
             } else if (option == 2) {
                 System.out.println("================= VIEW GRADES =================");
-                view_grades(con);
+                view_grades();
             } else if (option == 3) {
                 System.out.println("================= GENERATE TRANSCRIPT =================");
-                transcript(con);
+                transcript();
             } else if (option == 4) {
                 System.out.println("================= UPDATE PROFILE =================");
-                update_profile(con, sc);
+                update_profile(sc);
             } else if (option == 5) {
                 System.out.println("================= VIEW LOGS =================");
-                view_logs(con);
+                view_logs();
             } else if (option == 6) {
                 System.out.println("================= UPDATE CALENDAR =================");
-                update_calendar(con);
+                update_calendar();
                 return;
             } else if (option == 7) {
                 System.out.println("LOGGING OUT ... ");
@@ -79,8 +75,8 @@ public class AcadOffice extends User {
                 query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
                         + role
                         + "' and logged_in = '" + logged_in + "';";
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                x = st.executeUpdate(query);
+
+                dao.updatequery(query);
 
                 System.out.println("LOGGED OUT SUCCESSFULLY ");
                 return;
@@ -93,7 +89,7 @@ public class AcadOffice extends User {
 
     }
 
-    public static void catalog(Connection con) throws Exception {
+    public static void catalog() throws Exception {
 
         while (true) {
 
@@ -111,9 +107,6 @@ public class AcadOffice extends User {
             if (option == 1) {
                 String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code;";
                 rs = dao.readquery(query);
-                // Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-                // ResultSet.CONCUR_READ_ONLY);
-                // ResultSet rs = st.executeQuery(query);
 
                 Formatter fmt = new Formatter();
                 fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
@@ -164,8 +157,7 @@ public class AcadOffice extends User {
                         "insert into course_catalog (course_code,L,T,P,credits,department) values ('%s', %f, %f , %f , %f , '%s');",
                         course_code, l, t, p, credits, department);
 
-                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                int x = st.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 while (true) {
                     System.out.println("\nEnter pre-requisites (Enter NIL if none). Once done, enter q \n");
@@ -173,10 +165,9 @@ public class AcadOffice extends User {
                     if (pre_req.equalsIgnoreCase("q")) {
                         break;
                     } else {
-                        String query_ = "insert into pre_reqs (course_code,pre_req) values ('"
+                        query= "insert into pre_reqs (course_code,pre_req) values ('"
                                 + course_code + "','" + pre_req + "');";
-                        Statement st_ = con.createStatement();
-                        x = st_.executeUpdate(query_);
+                        x = dao.updatequery(query);
                     }
                 }
 
@@ -194,8 +185,8 @@ public class AcadOffice extends User {
 
                 String query = "SELECT * FROM pre_reqs,course_catalog where course_catalog.course_code=pre_reqs.course_code and course_catalog.course_code='"
                         + course_code + "' ;";
-                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ResultSet rs = st.executeQuery(query);
+
+                rs = dao.readquery(query);
 
                 Formatter fmt = new Formatter();
                 fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "L-T-P-C", "PRE-REQUISITES", "DEPARTMENT");
@@ -238,10 +229,7 @@ public class AcadOffice extends User {
                         + ", department='" + department
                         + "' where course_code='" + course_code + "';";
 
-                // System.out.println(query);
-
-                Statement st1 = con.createStatement();
-                int x = st1.executeUpdate(query);
+                x = dao.updatequery(query);
 
                 while (true) {
                     int option_pre = 0;
@@ -258,10 +246,10 @@ public class AcadOffice extends User {
                         System.out.println("\nEnter pre-requisite to be added ");
                         pre_req = sc.nextLine();
 
-                        String query_ = "insert into pre_reqs (course_code,pre_req) values ('"
+                        query= "insert into pre_reqs (course_code,pre_req) values ('"
                                 + course_code + "','" + pre_req + "');";
-                        Statement st_ = con.createStatement();
-                        x = st_.executeUpdate(query_);
+
+                        x = dao.updatequery(query);
 
                         System.out.println("Pre-requisite added successfully \n");
 
@@ -269,10 +257,10 @@ public class AcadOffice extends User {
                         System.out.println("\nEnter pre-requisite to be deleted ");
                         pre_req = sc.nextLine();
 
-                        String query_ = "delete from pre_reqs where course_code='" + course_code + "' and pre_req='"
+                        query = "delete from pre_reqs where course_code='" + course_code + "' and pre_req='"
                                 + pre_req + "';";
-                        Statement st_ = con.createStatement();
-                        x = st_.executeUpdate(query_);
+
+                        x = dao.updatequery(query);
 
                         System.out.println("Pre-requisite deleted successfully \n");
                     } else {
@@ -294,10 +282,11 @@ public class AcadOffice extends User {
                 sc.nextLine();
 
                 if (option_ == 1) {
-                    String query_ = "delete from pre_reqs where course_code='" + course_code
+                    query = "delete from pre_reqs where course_code='" + course_code
                             + "'; delete from course_catalog where course_code='" + course_code + "';";
-                    Statement st_ = con.createStatement();
-                    int x = st_.executeUpdate(query_);
+
+                    x = dao.updatequery(query);
+
                     System.out.println("Course Deleted Successfully");
                 } else {
                     System.out.println("Deletion Cancelled \n");
@@ -312,7 +301,7 @@ public class AcadOffice extends User {
 
     }
 
-    public static void view_grades(Connection con) throws Exception {
+    public static void view_grades() throws Exception {
 
         while (true) {
 
@@ -352,8 +341,7 @@ public class AcadOffice extends User {
                 return;
             }
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery(query);
+            rs = dao.readquery(query);
 
             Formatter fmt = new Formatter();
             fmt.format("\n %30s | %30s | %30s | %30s \n", "ENTRY_NO", "COURSE_CODE", "GRADE", "STATUS");
@@ -373,23 +361,19 @@ public class AcadOffice extends User {
 
     }
 
-    public static void transcript(Connection con) throws Exception {
+    public static void transcript() throws Exception {
 
         String entry_no = "";
         int batch = 0;
         String department = "";
-
-        String query = "";
-        Statement st;
-        ResultSet rs;
 
         System.out.println("Enter student entry no.  \n");
 
         entry_no = sc.nextLine();
 
         query = "select * from auth where entry_no = '" + entry_no + "'";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+
+        rs = dao.readquery(query);
 
         if (rs.next()) {
             batch = rs.getInt("batch");
@@ -415,8 +399,8 @@ public class AcadOffice extends User {
             query = String.format(
                     "select * from enrollments where entry_no = '%s' and status != 'RUNNING' and status != 'INSTRUCTOR WITHDREW' and status!='DROPPED' ;",
                     entry_no);
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
+
+            rs = dao.readquery(query);
 
             String text = String.format("\n %20s | %20s | %20s| %20s | %20s\n", "COURSE CODE", "ACAD YEAR", "SEMESTER",
                     "GRADE", "STATUS");
@@ -434,7 +418,7 @@ public class AcadOffice extends User {
 
             }
 
-            float cgpa = get_cgpa(entry_no, con);
+            float cgpa = get_cgpa(entry_no);
             writer.write("CGPA : " + cgpa);
 
             // Fetch Calendar
@@ -444,8 +428,7 @@ public class AcadOffice extends User {
 
             query = "Select * from calendar where status='RUNNING' ;";
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
+            rs = dao.readquery(query);
 
             while (rs.next()) {
                 current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
@@ -475,13 +458,7 @@ public class AcadOffice extends User {
 
     }
 
-    public static float get_cgpa(String entry_no, Connection con) throws Exception {
-
-        String query = "";
-
-        Statement st;
-        ResultSet rs;
-        int x;
+    public static float get_cgpa(String entry_no) throws Exception {
 
         HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
         grade_map.put("A", 10);
@@ -497,8 +474,8 @@ public class AcadOffice extends User {
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
                 entry_no);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+
+        rs = dao.readquery(query);
 
         String course_code = "", grade = "", status = "", type = "";
         float total_credits = 0, credits = 0;
@@ -520,102 +497,11 @@ public class AcadOffice extends User {
 
     }
 
-    // public static void update_profile(Connection con) throws Exception {
-
-    // while (true) {
-
-    // String phone_number = "phone_number";
-    // String name_field = "name";
-    // String password_field = "password";
-
-    // System.out.println(" \n Select field to update : ");
-    // System.out.println("1. " + phone_number);
-    // System.out.println("2. " + name_field);
-    // System.out.println("3. " + password_field);
-    // System.out.println("4. Go Back ");
-
-    // int option = 0;
-    // option = sc.nextInt();
-    // sc.nextLine();
-
-    // String email = "";
-    // String query = "";
-    // Statement st;
-    // ResultSet rs;
-    // int x;
-
-    // query = "Select email from logs;";
-
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // rs = st.executeQuery(query);
-
-    // rs.last();
-    // email = rs.getString("email");
-
-    // if (option == 1) {
-    // System.out.println("Enter new " + phone_number);
-    // String new_number = sc.nextLine();
-
-    // Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");
-    // Matcher match = ptrn.matcher(new_number);
-
-    // boolean b = match.find() && match.group().equals(new_number);
-
-    // if (b) {
-
-    // query = String.format("update auth set phone_number = '%s' where email = '%s'
-    // ", new_number, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Phone Number updated successfully");
-    // } else {
-    // System.out.println("Invalid Phone Number");
-    // }
-
-    // } else if (option == 2) {
-    // System.out.println("Enter new " + name_field);
-    // String new_name = sc.nextLine();
-
-    // query = String.format("update auth set name = '%s' where email = '%s'",
-    // new_name, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Name updated successfully");
-
-    // } else if (option == 3) {
-    // System.out.println("Enter new " + password_field);
-    // String new_pass = sc.nextLine();
-
-    // query = String.format("update auth set password = '%s' where email = '%s' ",
-    // new_pass, email);
-    // st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-    // ResultSet.CONCUR_READ_ONLY);
-    // x = st.executeUpdate(query);
-
-    // System.out.println("Password updated successfully");
-
-    // } else {
-    // return;
-    // }
-    // }
-    // }
-
-    public static void view_logs(Connection con) throws Exception {
-
-        String query = "";
-        Statement st;
-        ResultSet rs;
-        int x;
+    public static void view_logs() throws Exception {
 
         query = "Select * from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String email = "", role = "", logged_in = "", logged_out = "";
 
@@ -635,14 +521,10 @@ public class AcadOffice extends User {
 
     }
 
-    public static void update_calendar(Connection con) throws Exception {
-        String query = "";
-        Statement st;
-        ResultSet rs;
-
+    public static void update_calendar() throws Exception {
+     
         query = "select * from calendar;";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String start_acad_year = "", semester = "", status = "";
 
@@ -676,8 +558,7 @@ public class AcadOffice extends User {
                 "update calendar set status='COMPLETED' where status='RUNNING' ; insert into calendar values (%d,%d,'RUNNING'); ",
                 new_start_acad_year, new_semester);
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        int x = st.executeUpdate(query);
+        x = dao.updatequery(query);
 
         System.out.println("Calendar updated successfully");
 

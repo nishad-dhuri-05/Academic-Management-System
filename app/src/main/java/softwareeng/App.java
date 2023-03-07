@@ -12,15 +12,7 @@ public class App {
     DaoI dao = new Dao();
     public static void main(String[] args) throws Exception {
 
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        Connection con = DriverManager.getConnection(url, username, password);
-
-        System.out.println(
+    `   System.out.println(
                 "========================================================= WELCOME =========================================================");
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -28,17 +20,17 @@ public class App {
             String role = "";
 
             Auth.sc = sc;
-            role = Auth.main(con);
+            role = Auth.main();
 
             if (role.equals("acad")) {
                 AcadOffice.sc = sc;
-                AcadOffice.main(con);
+                AcadOffice.main();
             } else if (role.equals("faculty")) {
                 Faculty.sc = sc;
-                Faculty.main(con);
+                Faculty.main();
             } else if (role.equals("student")) {
                 Student.sc = sc;
-                Student.main(con);
+                Student.main();
             } else {
                 System.out.println("Logged out");
             }
