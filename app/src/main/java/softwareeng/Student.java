@@ -549,9 +549,9 @@ public class Student extends User {
                 " \n ==================================================================================== \n ");
 
         System.out.println("Here is your list of completed courses");
-        fmt.format("\n%20s = %f", "PE Credits \n", pe_credits);
-        fmt.format("%20s = %f", "PC Credits \n", pc_credits);
-        fmt.format("%20s = %f", "BTP Credits \n", btp_credits);
+        fmt.format("\n%20s = %f \n", "PE Credits", pe_credits);
+        fmt.format("%20s = %f \n", "PC Credits", pc_credits);
+        fmt.format("%20s = %f \n", "BTP Credits", btp_credits);
         System.out.println(fmt);
 
     }

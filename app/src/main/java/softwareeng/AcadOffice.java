@@ -59,7 +59,6 @@ public class AcadOffice extends User {
                 System.out.println("================= GENERATE TRANSCRIPT =================");
                 transcript();
             } else if (option == 4) {
-                System.out.println("================= UPDATE PROFILE =================");
                 update_profile(sc);
             } else if (option == 5) {
                 System.out.println("================= VIEW LOGS =================");
