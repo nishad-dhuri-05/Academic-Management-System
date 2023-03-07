@@ -499,9 +499,9 @@ public class Student extends User {
         String course_code = "", grade = "", status = "", type = "";
         float total_credits = 0, credits = 0;
         float total_points = 0;
-        int pc_count = 0;
-        int pe_count = 0;
-        int btp_count = 0;
+        float pc_credits = 0;
+        float pe_credits = 0;
+        float btp_credits = 0;
 
         Formatter fmt = new Formatter();
         fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "GRADE", "status", "type");
@@ -519,42 +519,40 @@ public class Student extends User {
             total_points = total_points + credits * (grade_map.get(grade));
 
             if (course_code.equalsIgnoreCase("CP301") || course_code.equalsIgnoreCase("CP302")) {
-                btp_count = btp_count + 1;
+                btp_credits = btp_credits + credits;
             }
 
             if (type.equals("PC")) {
-                pc_count = pc_count + 1;
+                pc_credits = pc_credits + credits;
             }
 
             if (type.equals("PE")) {
-                pe_count = pe_count + 1;
+                pe_credits = pe_credits + credits;
             }
         }
         float cgpa = total_points / total_credits;
 
-        if (pc_count >= 20 && pe_count >= 20 && btp_count == 2 && cgpa >= 5) {
+        System.out.println(
+                " \n ==================================================================================== \n ");
 
-            System.out.println(
-                    " \n ==================================================================================== \n ");
+        if (pc_credits >= 70 && pe_credits >= 70 && btp_credits == 6 && cgpa >= 5) {
             System.out.println(
                     "                      CONGRATULATIONS! YOU ARE ELIGIBLE FOR GRADUATION !                    ");
-            System.out.println(
-                    " \n ==================================================================================== \n ");
-
         } else {
 
             System.out.println(
-                    " \n ==================================================================================== \n ");
-            System.out.println(
-                    "                                   YOU ARE NOT ELIGIBLE FOR GRADUATION !                     ");
-            System.out.println(
-                    " \n ==================================================================================== \n ");
-
-            System.out.println("Here is your list of completed courses");
-
-            System.out.println(fmt);
+                    "                                  YOU ARE NOT ELIGIBLE FOR GRADUATION !                     ");
 
         }
+
+        System.out.println(
+                " \n ==================================================================================== \n ");
+
+        System.out.println("Here is your list of completed courses");
+        fmt.format("\n%20s = %f", "PE Credits \n", pe_credits);
+        fmt.format("%20s = %f", "PC Credits \n", pc_credits);
+        fmt.format("%20s = %f", "BTP Credits \n", btp_credits);
+        System.out.println(fmt);
 
     }
 

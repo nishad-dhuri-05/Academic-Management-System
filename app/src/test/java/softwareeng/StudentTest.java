@@ -251,6 +251,26 @@ public class StudentTest {
     }
 
     @Test
+    public void update_profile_test_1() throws Exception {
+
+        String input = "6\n1\n7008257139\n6\n7\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        Student.sc = sc;
+        Student.main();
+
+        String output = out.toString();
+        assertTrue(output.contains("Phone number updated successfully"));
+
+    }
+
+    @Test
     public void valid_option_test() throws Exception {
 
         String input = "";

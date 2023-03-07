@@ -167,4 +167,28 @@ values ('2020csbtest',
         'PASSED',
         2022,
         1);
+insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
+values ('2020csbtest',
+        'HS475',
+        'A-',
+        'PASSED',
+        2021,
+        2);
+
+insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
+values ('2020csbtest',
+        'CP301',
+        'A-',
+        'PASSED',
+        2021,
+        1);
+
+insert into enrollments (entry_no,course_code,grade,status,start_acad_year,semester)
+values ('2020csbtest',
+        'CP302',
+        'A-',
+        'PASSED',
+        2021,
+        2);
+
 

@@ -20,6 +20,8 @@ public class User {
 
     public static void update_profile(Scanner sc) throws Exception {
 
+        System.out.println("================= UPDATE PROFILE =================");
+
         while (true) {
 
             String phone_number_field = "phone_number";

@@ -32,3 +32,25 @@ insert into offered_to (course_code,start_acad_year,semester, offered_dept, batc
 values (
     'CS202',2021,2, 'CSE',2020, 7 , 'PC'
 );
+
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CP301',2021,1, 'CSE',2020, 7 , 'PC'
+);
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CS202',2021,2, 'CSE',2020, 7 , 'PC'
+);
+
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'HS475',2021,2, 'CSE',2020, 7 , 'PE'
+);
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CP301',2021,1, 'ALL',2020, 7 , 'PC'
+);
+insert into offered_to (course_code,start_acad_year,semester, offered_dept, batch , min_cgpa, type)
+values (
+    'CP302',2021,2, 'ALL',2020, 7 , 'PC'
+);
