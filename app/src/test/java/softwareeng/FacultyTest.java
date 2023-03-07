@@ -315,7 +315,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con);
+        Faculty.update_profile(con,sc);
 
         String output = out.toString();
         assertTrue(output.contains("Name updated successfully"));
@@ -324,7 +324,7 @@ public class FacultyTest {
     @Test
     public void update_profile_test_3() throws Exception {
 
-        String input = "\n3\nCSE\n7\n";
+        String input = "\n3\nfacultytestpass\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -334,36 +334,16 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Department updated successfully"));
-
-    }
-
-    @Test
-    public void update_profile_test_4() throws Exception {
-
-        String input = "\n4\nfacultytestpass\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Faculty.sc = sc;
-        Faculty.update_profile(con);
+        Faculty.update_profile(con,sc);
 
         String output = out.toString();
         assertTrue(output.contains("Password updated successfully"));
 
     }
     @Test
-    public void update_profile_test_5() throws Exception {
+    public void update_profile_test_4() throws Exception {
 
-        String input = "\n5\n2018-03-04\n7\n";
+        String input = "\n4\n2018-03-04\n7\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -373,7 +353,7 @@ public class FacultyTest {
 
         Scanner sc = new Scanner(System.in);
         Faculty.sc = sc;
-        Faculty.update_profile(con);
+        Faculty.update_profile(con,sc);
 
         String output = out.toString();
         assertTrue(output.contains("Joining date updated successfully"));

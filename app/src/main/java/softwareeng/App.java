@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class App {
 
+    DaoI dao = new Dao();
     public static void main(String[] args) throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");

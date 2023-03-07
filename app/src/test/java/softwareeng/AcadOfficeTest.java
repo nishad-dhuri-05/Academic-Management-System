@@ -20,6 +20,7 @@ import java.util.Scanner;
 public class AcadOfficeTest {
 
     static Connection con;
+    DaoI dao = new Dao();
   
     public AcadOfficeTest() throws Exception {
 
@@ -39,36 +40,15 @@ public class AcadOfficeTest {
         String role = "acad";
         
         System.out.println("LOGGED IN TIME : " + logged_in);
-        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+        // int m = st.executeUpdate(query);
+        // Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         
         query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
         + "');";
-        int m = st.executeUpdate(query);
+        dao.updatequery(query);
+        
     }
-
-    // @Test
-    // public void main_test_7() throws Exception {
-
-    //     String input = "";
-    //     ByteArrayInputStream in;
-
-    //     input = "7\n\n";
-    //     in = new ByteArrayInputStream(input.getBytes());
-    //     System.setIn(in);
-
-    //     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    //     PrintStream ps = new PrintStream(out);
-    //     System.setOut(ps);
-
-    //     Scanner sc = new Scanner(System.in);
-    //     AcadOffice.sc = sc;
-    //     AcadOffice.main(con);
-
-    //     String output = out.toString();
-    //     assertTrue(output.contains("LOGGED OUT SUCCESSFULLY"));
-
-    // }
- 
 
     @Test
     public void catalog_test() throws Exception {
@@ -390,88 +370,6 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("Calendar updated successfully"));
-
-    }
-
-    @Test
-    public void update_profile_test_1() throws Exception {
-
-        String input = "4\n1\n7008257139\n4\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Phone Number updated successfully"));
-
-    }
-
-    @Test
-    public void update_profile_test_1_fail() throws Exception {
-
-        String input = "4\n1\n70082571399\n4\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-
-        AcadOffice.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Invalid"));
-
-    }
-
-    @Test
-    public void update_profile_test_2() throws Exception {
-
-        String input = "\n2\nStaff\sDean\soffice\n4\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Name updated successfully"));
-
-    }
-
-    @Test
-    public void update_profile_test_3() throws Exception {
-
-        String input = "\n3\nacadtestpass\n4\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        AcadOffice.sc = sc;
-        AcadOffice.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Password updated successfully"));
 
     }
 

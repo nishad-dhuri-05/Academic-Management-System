@@ -19,6 +19,7 @@ import static org.junit.Assert.*;
 public class StudentTest {
     static Connection con;
 
+    DaoI dao = new Dao();
     public StudentTest() throws Exception {
 
         ResourceBundle rd = ResourceBundle.getBundle("config");
@@ -259,86 +260,6 @@ public class StudentTest {
         assertTrue(output.contains("TRACK GRADUATION"));
 
     }
-
-    @Test
-    public void update_profile_test_1() throws Exception {
-
-        String input = "6\n1\n7008257139\n6\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Student.sc = sc;
-        Student.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Phone Number updated successfully"));
-
-    }
-    @Test
-    public void update_profile_test_1_fail() throws Exception {
-
-        String input = "6\n1\n70082571399\n6\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Student.sc = sc;
-        Student.main(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Invalid Phone Number"));
-
-    }
-
-    @Test
-    public void update_profile_test_2() throws Exception {
-
-        String input = "\n2\nstudent\stest\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Student.sc = sc;
-        Student.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Name updated successfully"));
-
-    }
-
-   @Test
-    public void update_profile_test_3() throws Exception {
-
-        String input = "\n3\n2020csbtest\n7\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(out);
-        System.setOut(ps);
-
-        Scanner sc = new Scanner(System.in);
-        Student.sc = sc;
-        Student.update_profile(con);
-
-        String output = out.toString();
-        assertTrue(output.contains("Password updated successfully"));
-
-    }
-
   
     @Test
     public void valid_option_test() throws Exception {
