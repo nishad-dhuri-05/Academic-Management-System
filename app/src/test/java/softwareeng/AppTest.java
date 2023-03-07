@@ -32,7 +32,7 @@ public class AppTest {
     @Test
     public void login_acad() throws Exception {
 
-        String input = "acadtest@iitrpr.ac.in\nacadtestpass\n7\n1\n\n\n";
+        String input = "acadtest@iitrpr.ac.in\nacadtestpass\n8\n1\n\n\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 

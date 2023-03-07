@@ -13,21 +13,21 @@ import java.util.Scanner;
 public class AcadOfficeTest {
 
     DaoI dao = new Dao();
-  
+
     public AcadOfficeTest() throws Exception {
 
         Timestamp logged_in = new Timestamp(System.currentTimeMillis());
-        String query = "";  
+        String query = "";
 
         String email = "acadtest@iitrpr.ac.in";
         String role = "acad";
-        
+
         System.out.println("LOGGED IN TIME : " + logged_in);
 
         query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
-        + "');";
+                + "');";
         dao.updatequery(query);
-        
+
     }
 
     @Test
@@ -36,7 +36,7 @@ public class AcadOfficeTest {
         String input = "";
         ByteArrayInputStream in;
 
-        input = "1\n1\n5\n7\n\n";
+        input = "1\n1\n5\n8\n\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -53,7 +53,6 @@ public class AcadOfficeTest {
 
     }
 
-   
     @Test
     public void add_course() throws Exception {
 
@@ -153,6 +152,7 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Course Deleted Successfully"));
 
     }
+
     @Test
     public void delete_course_cancellation() throws Exception {
 
@@ -193,11 +193,10 @@ public class AcadOfficeTest {
 
     }
 
-
     @Test
     public void view_grade_all() throws Exception {
 
-        String input = "2\n1\n4\n7\n";
+        String input = "2\n1\n4\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -257,7 +256,7 @@ public class AcadOfficeTest {
     @Test
     public void generate_transcript() throws Exception {
 
-        String input = "3\n2020csb1317\n7\n";
+        String input = "3\n2020csb1317\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -273,10 +272,11 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Transcript generated successfully."));
 
     }
+
     @Test
     public void generate_transcript_invalid() throws Exception {
 
-        String input = "3\n2020csb131799\n7\n";
+        String input = "3\n2020csb131799\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -296,7 +296,7 @@ public class AcadOfficeTest {
     @Test
     public void view_logs() throws Exception {
 
-        String input = "5\n7\n";
+        String input = "5\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -316,7 +316,7 @@ public class AcadOfficeTest {
     @Test
     public void update_calendar() throws Exception {
 
-        String input = "6\n2022\n2\n7\n";
+        String input = "6\n2022\n2\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -332,11 +332,11 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Calendar updated successfully"));
 
     }
-    
+
     @Test
     public void update_profile() throws Exception {
 
-        String input = "4\n1\n7008257139\n5\n7\n";
+        String input = "4\n1\n7008257139\n5\n8\n";
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -352,13 +352,14 @@ public class AcadOfficeTest {
         assertTrue(output.contains("Phone number updated successfully"));
 
     }
+
     @Test
     public void valid_option_test() throws Exception {
 
         String input = "";
         ByteArrayInputStream in;
 
-        input = "99\n7\n";
+        input = "99\n8\n";
         in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
@@ -372,6 +373,26 @@ public class AcadOfficeTest {
 
         String output = out.toString();
         assertTrue(output.contains("Select a valid option"));
+
+    }
+
+    @Test
+    public void grad_track_test() throws Exception {
+
+        String input = "7\n2020csbtest\n8\n";
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+
+        Scanner sc = new Scanner(System.in);
+        AcadOffice.sc = sc;
+        AcadOffice.main();
+
+        String output = out.toString();
+        assertTrue(output.contains("GRADUATION"));
 
     }
 

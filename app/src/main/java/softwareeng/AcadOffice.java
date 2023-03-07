@@ -7,7 +7,6 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
 
-
 public class AcadOffice extends User {
 
     static Scanner sc = new Scanner(System.in);
@@ -41,7 +40,8 @@ public class AcadOffice extends User {
             System.out.println("4. Update Profile");
             System.out.println("5. View Logs");
             System.out.println("6. Update Event Calendar");
-            System.out.println("7. Logout");
+            System.out.println("7. Track Graduation of a Student");
+            System.out.println("8. Logout");
 
             int option = 0;
 
@@ -66,8 +66,10 @@ public class AcadOffice extends User {
             } else if (option == 6) {
                 System.out.println("================= UPDATE CALENDAR =================");
                 update_calendar();
-                return;
             } else if (option == 7) {
+                System.out.println("================= TRACK GRADUATION =================");
+                track_grad();
+            } else if (option == 8) {
                 System.out.println("LOGGING OUT ... ");
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
 
@@ -164,7 +166,7 @@ public class AcadOffice extends User {
                     if (pre_req.equalsIgnoreCase("q")) {
                         break;
                     } else {
-                        query= "insert into pre_reqs (course_code,pre_req) values ('"
+                        query = "insert into pre_reqs (course_code,pre_req) values ('"
                                 + course_code + "','" + pre_req + "');";
                         x = dao.updatequery(query);
                     }
@@ -245,7 +247,7 @@ public class AcadOffice extends User {
                         System.out.println("\nEnter pre-requisite to be added ");
                         pre_req = sc.nextLine();
 
-                        query= "insert into pre_reqs (course_code,pre_req) values ('"
+                        query = "insert into pre_reqs (course_code,pre_req) values ('"
                                 + course_code + "','" + pre_req + "');";
 
                         x = dao.updatequery(query);
@@ -521,7 +523,7 @@ public class AcadOffice extends User {
     }
 
     public static void update_calendar() throws Exception {
-     
+
         query = "select * from calendar;";
         rs = dao.readquery(query);
 
@@ -560,6 +562,87 @@ public class AcadOffice extends User {
         x = dao.updatequery(query);
 
         System.out.println("Calendar updated successfully");
+
+    }
+
+    public static void track_grad() throws Exception {
+
+        String entry_no = "";
+
+        System.out.println("Enter student entry no.  \n");
+        entry_no = sc.nextLine();
+
+        HashMap<String, Integer> grade_map = new HashMap<String, Integer>();
+        grade_map.put("A", 10);
+        grade_map.put("A-", 9);
+        grade_map.put("B", 8);
+        grade_map.put("B-", 7);
+        grade_map.put("C", 6);
+        grade_map.put("C-", 5);
+        grade_map.put("D", 4);
+
+        query = String.format(
+                "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
+                entry_no);
+        rs = dao.readquery(query);
+
+        String course_code = "", grade = "", status = "", type = "";
+        float total_credits = 0, credits = 0;
+        float total_points = 0;
+        float pc_credits = 0;
+        float pe_credits = 0;
+        float btp_credits = 0;
+
+        Formatter fmt = new Formatter();
+        fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "GRADE", "status", "type");
+
+        while (rs.next()) {
+            course_code = rs.getString("course_code");
+            grade = rs.getString("grade");
+            status = rs.getString("status");
+            type = rs.getString("type");
+            credits = Float.parseFloat(rs.getString("credits"));
+
+            fmt.format("\n %20s | %20s | %20s | %20s \n", course_code, grade, status, type);
+
+            total_credits = total_credits + credits;
+            total_points = total_points + credits * (grade_map.get(grade));
+
+            if (course_code.equalsIgnoreCase("CP301") || course_code.equalsIgnoreCase("CP302")) {
+                btp_credits = btp_credits + credits;
+            }
+
+            if (type.equals("PC")) {
+                pc_credits = pc_credits + credits;
+            }
+
+            if (type.equals("PE")) {
+                pe_credits = pe_credits + credits;
+            }
+        }
+        float cgpa = total_points / total_credits;
+
+        System.out.println(
+                " \n ==================================================================================== \n ");
+
+        if (pc_credits >= 70 && pe_credits >= 70 && btp_credits == 6 && cgpa >= 5) {
+            System.out.println(
+                    "                     STUDENT IS ELIGIBLE FOR GRADUATION !                    ");
+        } else {
+
+            System.out.println(
+                    "                       NOT ELIGIBLE FOR GRADUATION !                         ");
+
+        }
+
+        System.out.println(
+                " \n ==================================================================================== \n ");
+
+        System.out.println("Here is the list of completed courses");
+        fmt.format("\n%20s = %f \n", "PE Credits", pe_credits);
+        fmt.format("%20s = %f \n", "PC Credits", pc_credits);
+        fmt.format("%20s = %f \n", "BTP Credits", btp_credits);
+        System.out.println(fmt);
 
     }
 
