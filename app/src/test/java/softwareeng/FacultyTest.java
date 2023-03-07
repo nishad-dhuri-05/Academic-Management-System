@@ -18,17 +18,9 @@ import static org.junit.Assert.*;
 
 public class FacultyTest {
 
-    static Connection con;
+    DaoI dao = new Dao();    
 
     public FacultyTest() throws Exception {
-
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-
-        Class.forName("org.postgresql.Driver");
-        this.con = DriverManager.getConnection(url, username, password);
 
         Timestamp logged_in = new Timestamp(System.currentTimeMillis());
         String query = "";
@@ -37,12 +29,11 @@ public class FacultyTest {
         String role = "faculty";
 
         System.out.println("LOGGED IN TIME : " + logged_in);
-        Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
         query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
                 + "');";
-        int m = st.executeUpdate(query);
 
+        dao.updatequery(query);
     }
 
     @Test

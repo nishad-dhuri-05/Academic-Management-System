@@ -6,32 +6,15 @@ import static org.junit.Assert.*;
 // import java.sql.;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.PrintStream;
 import java.sql.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Time;
-import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class AcadOfficeTest {
 
-    static Connection con;
     DaoI dao = new Dao();
   
     public AcadOfficeTest() throws Exception {
-
-        
-        ResourceBundle rd = ResourceBundle.getBundle("config");
-        String url = rd.getString("url"); // localhost:5432
-        String username = rd.getString("username");
-        String password = rd.getString("password");
-        
-        Class.forName("org.postgresql.Driver");
-        this.con = DriverManager.getConnection(url, username, password);
 
         Timestamp logged_in = new Timestamp(System.currentTimeMillis());
         String query = "";  
@@ -41,9 +24,6 @@ public class AcadOfficeTest {
         
         System.out.println("LOGGED IN TIME : " + logged_in);
 
-        // int m = st.executeUpdate(query);
-        // Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        
         query = "insert into logs(email,role,logged_in) values ('" + email + "','" + role + "', '" + logged_in
         + "');";
         dao.updatequery(query);

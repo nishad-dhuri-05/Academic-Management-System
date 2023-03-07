@@ -4,25 +4,22 @@ import java.sql.*;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Student extends User{
-    
+public class Student extends User {
+
     static Scanner sc = new Scanner(System.in);
-    
 
-    public static void main(Connection con) throws Exception {
+    static DaoI dao = new Dao();
 
-        String query = "";
-        Statement st;
-        ResultSet rs;
-        int ret;
+    static String query = "";
+    static ResultSet rs;
+    static int x;
+
+    public static void main() throws Exception {
 
         query = "Select * from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String email = "", role = "", logged_in = "";
 
@@ -52,29 +49,30 @@ public class Student extends User{
 
             if (option == 1) {
                 System.out.println("================= COURSE REGISTRATION =================");
-                coursereg(con);
+                coursereg();
             } else if (option == 2) {
                 System.out.println("================= COURSE DE-REGISTRATION =================");
-                coursedereg(con);
+                coursedereg();
             } else if (option == 3) {
                 System.out.println("================= VIEW GRADES =================");
-                view_grades(con);
+                view_grades();
             } else if (option == 4) {
                 System.out.println("================= VIEW CGPA =================");
-                float x = get_cgpa(con);
+                float x = get_cgpa();
             } else if (option == 5) {
                 System.out.println("================= TRACK GRADUATION =================");
-                track_grad(con);
+                track_grad();
             } else if (option == 6) {
-                update_profile(con,sc);
+                update_profile(sc);
             } else if (option == 7) {
                 Timestamp logged_out = new Timestamp(System.currentTimeMillis());
 
                 query = "update logs set logged_out = '" + logged_out + "' where email = '" + email + "' and role = '"
                         + role
                         + "' and logged_in = '" + logged_in + "';";
-                st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                ret = st.executeUpdate(query);
+
+                x = dao.updatequery(query);
+
                 return;
             } else {
                 System.out.println("Select a valid option \n");
@@ -86,17 +84,13 @@ public class Student extends User{
 
     }
 
-    public static void coursereg(Connection con) throws Exception {
+    public static void coursereg() throws Exception {
 
         String email = "";
         String query = "";
         String entry_no = "";
         String department = "";
         int batch = 0;
-
-        Statement st;
-        ResultSet rs;
-        int x;
 
         // Fetch Calendar
 
@@ -105,8 +99,7 @@ public class Student extends User{
 
         query = "Select * from calendar where status='RUNNING' ;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
@@ -137,15 +130,13 @@ public class Student extends User{
 
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -153,23 +144,23 @@ public class Student extends User{
             batch = Integer.parseInt(rs.getString("batch"));
         }
 
-        float student_cgpa = get_cgpa(con);
+        float student_cgpa = get_cgpa();
         int eligible = -1;
 
-        view_offerings(con);
+        view_offerings();
 
         // Get Credit Limit
 
         float credit_limit = 0;
         credit_limit = (float) (1.25
-                * ((get_credits(prev_acad_year, prev_semester, con)
-                        + get_credits(prev_prev_acad_year, prev_prev_semester, con))
+                * ((get_credits(prev_acad_year, prev_semester)
+                        + get_credits(prev_prev_acad_year, prev_prev_semester))
                         / 2));
 
         System.out.println(String.format(
                 "Previous two semesters credits : \n YEAR : %d SEM : %d Credits : %f \n YEAR : %d SEM : %d Credits : %f ",
-                prev_acad_year, prev_semester, get_credits(prev_acad_year, prev_semester, con), prev_prev_acad_year,
-                prev_prev_semester, get_credits(prev_prev_acad_year, prev_prev_semester, con)));
+                prev_acad_year, prev_semester, get_credits(prev_acad_year, prev_semester), prev_prev_acad_year,
+                prev_prev_semester, get_credits(prev_prev_acad_year, prev_prev_semester)));
 
         System.out.println("Credit Limit :" + credit_limit);
 
@@ -181,8 +172,7 @@ public class Student extends User{
                 "select credits from enrollments,course_catalog where entry_no = '%s' and start_acad_year= %d and semester = %d and enrollments.course_code = course_catalog.course_code and status = 'RUNNING';",
                 entry_no, current_start_acad_year, current_semester);
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_credits += Float.parseFloat(rs.getString("credits"));
@@ -198,8 +188,7 @@ public class Student extends User{
         float course_credit = 0;
         query = "Select credits from course_catalog where course_code = '" + course_code + "';";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             course_credit = Float.parseFloat(rs.getString("credits"));
@@ -217,8 +206,7 @@ public class Student extends User{
                     course_code, current_start_acad_year, current_semester, department, batch);
 
             // System.out.println(query);
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            rs = st.executeQuery(query);
+            rs = dao.readquery(query);
 
             if (!rs.isBeforeFirst()) {
                 System.out.println("Course not offered to your batch ! ");
@@ -239,8 +227,7 @@ public class Student extends User{
                     // Check pre-reqs
 
                     query = String.format("select * from pre_reqs where course_code = '%s';", course_code);
-                    st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                    rs = st.executeQuery(query);
+                    rs = dao.readquery(query);
 
                     int flag = 0;
                     while (rs.next()) {
@@ -255,8 +242,7 @@ public class Student extends User{
                                 "select * from enrollments where entry_no = '%s' and course_code = '%s' and status = 'PASSED';",
                                 entry_no, pre_req_course_code);
 
-                        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-                        ResultSet rs2 = st.executeQuery(query);
+                        ResultSet rs2 = dao.readquery(query);
 
                         if (!rs2.isBeforeFirst()) {
                             flag = 1;
@@ -285,8 +271,7 @@ public class Student extends User{
                     "insert into enrollments (entry_no,course_code,status,start_acad_year,semester) values ( '%s' , '%s' , 'RUNNING' , %d, %d);",
                     entry_no, course_code, current_start_acad_year, current_semester);
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            x = st.executeUpdate(query);
+            x = dao.updatequery(query);
 
             System.out.println("Course Registered Successfully");
         } else {
@@ -294,17 +279,13 @@ public class Student extends User{
         }
     }
 
-    public static void coursedereg(Connection con) throws Exception {
+    public static void coursedereg() throws Exception {
 
         String email = "";
         String query = "";
         String entry_no = "";
         String department = "";
         int batch = 0;
-
-        Statement st;
-        ResultSet rs;
-        int x;
 
         // Fetch Calendar
 
@@ -313,8 +294,7 @@ public class Student extends User{
 
         query = "Select * from calendar where status='RUNNING';";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             current_start_acad_year = Integer.parseInt(rs.getString("start_acad_year"));
@@ -325,15 +305,13 @@ public class Student extends User{
 
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -351,8 +329,7 @@ public class Student extends User{
                 "select * from enrollments where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                 entry_no, course_code, current_start_acad_year, current_semester);
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         if (!rs.isBeforeFirst()) {
             System.out.println("Course not registered ! Course De-Registration Failed");
@@ -362,14 +339,13 @@ public class Student extends User{
                     "delete from enrollments where entry_no = '%s' and course_code = '%s' and start_acad_year = %d and semester = %d and status = 'RUNNING';",
                     entry_no, course_code, current_start_acad_year, current_semester);
 
-            st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            x = st.executeUpdate(query);
+            x = dao.updatequery(query);
 
             System.out.println("Course De-Registered Successfully");
         }
     }
 
-    public static void view_grades(Connection con) throws Exception {
+    public static void view_grades() throws Exception {
 
         String email = "";
         String query = "";
@@ -377,21 +353,15 @@ public class Student extends User{
         String department = "";
         int batch = 0;
 
-        Statement st;
-        ResultSet rs;
-        int x;
-
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -402,8 +372,7 @@ public class Student extends User{
         query = String.format(
                 "select enrollments.course_code,grade,status,type from enrollments,offered_to where entry_no = '%s' and batch = %d and offered_dept= '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester ;",
                 entry_no, batch, department);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         Formatter fmt = new Formatter();
         fmt.format("\n %20s | %20s | %20s | %20s \n", "COURSE CODE", "GRADE", "status", "type");
@@ -422,7 +391,7 @@ public class Student extends User{
 
     }
 
-    public static float get_cgpa(Connection con) throws Exception {
+    public static float get_cgpa() throws Exception {
 
         String email = "";
         String query = "";
@@ -430,21 +399,15 @@ public class Student extends User{
         String department = "";
         int batch = 0;
 
-        Statement st;
-        ResultSet rs;
-        int x;
-
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -466,8 +429,7 @@ public class Student extends User{
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED';",
                 entry_no);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String course_code = "", grade = "", status = "", type = "";
         float total_credits = 0, credits = 0;
@@ -496,7 +458,7 @@ public class Student extends User{
 
     }
 
-    public static void track_grad(Connection con) throws Exception {
+    public static void track_grad() throws Exception {
 
         String email = "";
         String query = "";
@@ -504,21 +466,15 @@ public class Student extends User{
         String department = "";
         int batch = 0;
 
-        Statement st;
-        ResultSet rs;
-        int x;
-
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -538,8 +494,7 @@ public class Student extends User{
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='INSTRUCTOR_WITHDREW' and status!='DROPPED' ;",
                 entry_no);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String course_code = "", grade = "", status = "", type = "";
         float total_credits = 0, credits = 0;
@@ -603,100 +558,13 @@ public class Student extends User{
 
     }
 
-    // public static void update_profile(Connection con) throws Exception {
-
-    //     while (true) {
-
-    //         String phone_number = "phone_number";
-    //         String name_field = "name";
-    //         String password_field = "password";
-
-    //         System.out.println(" \n Select field to update : ");
-    //         System.out.println("1. " + phone_number);
-    //         System.out.println("2. " + name_field);
-    //         System.out.println("3. " + password_field);
-    //         System.out.println("4. Go Back ");
-
-    //         int option = 0;
-    //         option = sc.nextInt();
-    //         sc.nextLine();
-
-    //         String email = "";
-    //         String query = "";
-    //         Statement st;
-    //         ResultSet rs;
-    //         int x;
-
-    //         query = "Select email from logs;";
-
-    //         st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-    //         rs = st.executeQuery(query);
-
-    //         rs.last();
-    //         email = rs.getString("email");
-
-    //         if (option == 1) {
-    //             System.out.println("Enter new " + phone_number);
-    //             String new_number = sc.nextLine();
-
-    //             Pattern ptrn = Pattern.compile("(0/91)?[0-9]{10}");  
-    //             Matcher match = ptrn.matcher(new_number);  
-    //             boolean b = match.find() && match.group().equals(new_number);
-
-    //             if (b){
-
-    //                 query = String.format("update auth set phone_number = '%s' where email = '%s' ", new_number, email);
-    //                 st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-    //                 x = st.executeUpdate(query);
-    
-    
-    //                 System.out.println("Phone Number updated successfully");
-    //             }
-    //             else{
-    //                 System.out.println("Invalid Phone Number");
-    //             }
-                
-
-    //         } else if (option == 2) {
-    //             System.out.println("Enter new " + name_field);
-    //             String new_name = sc.nextLine();
-
-    //             query = String.format("update auth set name = '%s' where email = '%s'", new_name, email);
-    //             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-    //             x = st.executeUpdate(query);
-
-    //             System.out.println("Name updated successfully");
-
-    //         } else if (option == 3) {
-    //             System.out.println("Enter new " + password_field);
-    //             String new_pass = sc.nextLine();
-
-    //             query = String.format("update auth set password = '%s' where email = '%s' ", new_pass, email);
-    //             st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-    //             x = st.executeUpdate(query);
-
-    //             System.out.println("Password updated successfully");
-
-    //         } else {
-    //             break;
-    //         }
-
-    //     }
-
-    // }
-
-    public static void view_offerings(Connection con) throws Exception {
-
-        String query = "";
-        Statement st;
-        ResultSet rs;
+    public static void view_offerings() throws Exception {
 
         query = "select course_offering.course_code,course_offering.start_acad_year,course_offering.semester,instructor_email,offered_dept, batch, min_cgpa, type "
                 +
                 "FROM course_offering " +
                 "inner join offered_to on course_offering.course_code=offered_to.course_code and course_offering.start_acad_year=offered_to.start_acad_year and course_offering.semester=offered_to.semester;";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         Formatter fmt = new Formatter();
         fmt.format("\n %15s | %10s | %10s | %30s | %15s | %10s | %10s | %10s \n", "COURSE_CODE", "ACAD_YEAR",
@@ -720,7 +588,7 @@ public class Student extends User{
 
     }
 
-    public static float get_credits(int acad_year, int semester, Connection con) throws Exception {
+    public static float get_credits(int acad_year, int semester) throws Exception {
 
         String email = "";
         String query = "";
@@ -728,21 +596,15 @@ public class Student extends User{
         String department = "";
         int batch = 0;
 
-        Statement st;
-        ResultSet rs;
-        int x;
-
         query = "Select email from logs;";
 
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         rs.last();
         email = rs.getString("email");
 
         query = "Select * from auth where email= '" + email + "';";
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         while (rs.next()) {
             entry_no = rs.getString("entry_no");
@@ -764,8 +626,7 @@ public class Student extends User{
         query = String.format(
                 "select enrollments.course_code,grade,status,type,credits from enrollments,offered_to,course_catalog where enrollments.start_acad_year =%d and enrollments.semester=%d and course_catalog.course_code = enrollments.course_code and entry_no = '%s' and enrollments.course_code = offered_to.course_code and enrollments.start_acad_year = offered_to.start_acad_year and enrollments.semester = offered_to.semester and status!='RUNNING' and status!='DROPPED' and status!='INSTRUCTOR WITHDREW' ;",
                 acad_year, semester, entry_no);
-        st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        rs = st.executeQuery(query);
+        rs = dao.readquery(query);
 
         String course_code = "", grade = "", status = "", type = "";
         float total_credits = 0, credits = 0;
