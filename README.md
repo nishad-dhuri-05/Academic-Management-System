@@ -2,11 +2,11 @@
 
 ## UML DIAGRAMS
 
-### UML Class Diagram
-![UML_Class](https://user-images.githubusercontent.com/72215169/232163496-76562a25-f2d1-46dd-b79e-afa3ba77c5a2.png)
-
-### UML Activity Diagram
+### Activity Diagram
 ![UML_Activity_Diagram](https://user-images.githubusercontent.com/72215169/232163530-1a42cb00-14a3-41d7-a87f-62dc444f5bd7.png)
+
+### Class Diagram
+![UML_Class](https://user-images.githubusercontent.com/72215169/232163496-76562a25-f2d1-46dd-b79e-afa3ba77c5a2.png)
 
 
 ## CODE
