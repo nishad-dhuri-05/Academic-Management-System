@@ -1,5 +1,7 @@
 # Academic Management System
 
+This academic management system manages the students , teachers and the academic administration of an institute. It provides facilities for the complete institutional journey of the stakeholders.
+
 ## UML DIAGRAMS
 
 ### Activity Diagram
